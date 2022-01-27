@@ -1,0 +1,25 @@
+#ifndef POWERMSG_H
+#define POWERMSG_H
+#include "traymsg.h"
+
+#include <QObject>
+
+class powerMsg : public Traymsg
+{
+    Q_OBJECT
+public:
+    explicit powerMsg(QString  tip,  uchar addr,    QObject *parent = nullptr);
+        ~powerMsg();
+
+       void wrPowerAddr(uchar addr );
+       uchar rdPowerAddr();
+signals:
+
+public slots:
+
+private:
+       uchar  powerAddr;
+
+};
+
+#endif // POWERMSG_H

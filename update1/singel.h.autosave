@@ -1,0 +1,60 @@
+#ifndef SINGEL_H
+#define SINGEL_H
+#include<QMutexLocker>
+//#include <QSharedPointer>
+#include <QTreeWidgetItem>
+#include "traymsg.h"
+
+
+class Singel: public QObject
+{
+    Q_OBJECT
+public:
+    static   Singel * m_Instance()
+    {
+        if(m_pInstance == NULL)
+        {
+            QMutexLocker  mlocker(&m_Mutex);  //
+            if(m_pInstance == NULL)
+            {
+                m_pInstance = new  Singel();
+            }
+        }
+        return  m_pInstance;
+    }
+
+
+    QStringList   portNamelist; //当前所有接入串口名
+    QStringList  serialPara; //当前升级所用串口的所有参数
+
+
+    ushort CRC16_Modbus(const uchar *_pBuf, ushort _usLen);//CRC校验
+private:
+    Singel(){}
+    Singel(const Singel&){}
+    Singel& operator ==(const   Singel&){}
+
+    static Singel* m_pInstance;  //类的指针
+    static QMutex  m_Mutex;
+
+
+public:
+    class CGarbo    //析构m_pInstance 指针的类
+    {
+    public:
+        ~CGarbo() {
+            if(m_pInstance!=NULL)
+            {
+                delete  m_pInstance;
+                m_pInstance = NULL;
+            }
+        }
+
+    };
+    static CGarbo  m_Garbo;
+
+};
+
+
+
+#endif

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 //  w.show();
   w.show();
   return a.exec();
-#if 0
+#if 1
         if (loginDlg.exec() == QDialog::Accepted)
        {
              Widget w ;

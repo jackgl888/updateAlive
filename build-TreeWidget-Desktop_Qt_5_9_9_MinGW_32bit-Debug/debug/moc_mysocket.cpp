@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MySocket_t {
-    QByteArrayData data[31];
-    char stringdata0[314];
+    QByteArrayData data[32];
+    char stringdata0[331];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -48,31 +48,33 @@ QT_MOC_LITERAL(13, 123, 4), // "data"
 QT_MOC_LITERAL(14, 128, 12), // "slotDataSent"
 QT_MOC_LITERAL(15, 141, 4), // "type"
 QT_MOC_LITERAL(16, 146, 7), // "variant"
-QT_MOC_LITERAL(17, 154, 14), // "cmdBootConnect"
-QT_MOC_LITERAL(18, 169, 6), // "target"
-QT_MOC_LITERAL(19, 176, 4), // "addr"
-QT_MOC_LITERAL(20, 181, 19), // "bootEraseAppSectors"
-QT_MOC_LITERAL(21, 201, 16), // "bootWriteAppdata"
-QT_MOC_LITERAL(22, 218, 12), // "txframeIndex"
-QT_MOC_LITERAL(23, 231, 13), // "bootJumpToApp"
-QT_MOC_LITERAL(24, 245, 19), // "readBackLcformerApp"
-QT_MOC_LITERAL(25, 265, 10), // "backUpFile"
-QT_MOC_LITERAL(26, 276, 8), // "filename"
-QT_MOC_LITERAL(27, 285, 11), // "tcpSendData"
-QT_MOC_LITERAL(28, 297, 6), // "uchar*"
-QT_MOC_LITERAL(29, 304, 5), // "txBuf"
-QT_MOC_LITERAL(30, 310, 3) // "len"
+QT_MOC_LITERAL(17, 154, 16), // "cmdConnectTarget"
+QT_MOC_LITERAL(18, 171, 6), // "target"
+QT_MOC_LITERAL(19, 178, 4), // "addr"
+QT_MOC_LITERAL(20, 183, 14), // "cmdAppJumpBoot"
+QT_MOC_LITERAL(21, 198, 19), // "bootEraseAppSectors"
+QT_MOC_LITERAL(22, 218, 16), // "bootWriteAppdata"
+QT_MOC_LITERAL(23, 235, 12), // "txframeIndex"
+QT_MOC_LITERAL(24, 248, 13), // "bootJumpToApp"
+QT_MOC_LITERAL(25, 262, 19), // "readBackLcformerApp"
+QT_MOC_LITERAL(26, 282, 10), // "backUpFile"
+QT_MOC_LITERAL(27, 293, 8), // "filename"
+QT_MOC_LITERAL(28, 302, 11), // "tcpSendData"
+QT_MOC_LITERAL(29, 314, 6), // "uchar*"
+QT_MOC_LITERAL(30, 321, 5), // "txBuf"
+QT_MOC_LITERAL(31, 327, 3) // "len"
 
     },
     "MySocket\0sigRunMsgToUi\0\0ip\0cmd\0msg\0"
     "value\0timeoutMethod\0slotConnected\0"
     "slotDisconnected\0recvData\0recvDataMethod\0"
     "const uchar*\0data\0slotDataSent\0type\0"
-    "variant\0cmdBootConnect\0target\0addr\0"
-    "bootEraseAppSectors\0bootWriteAppdata\0"
-    "txframeIndex\0bootJumpToApp\0"
-    "readBackLcformerApp\0backUpFile\0filename\0"
-    "tcpSendData\0uchar*\0txBuf\0len"
+    "variant\0cmdConnectTarget\0target\0addr\0"
+    "cmdAppJumpBoot\0bootEraseAppSectors\0"
+    "bootWriteAppdata\0txframeIndex\0"
+    "bootJumpToApp\0readBackLcformerApp\0"
+    "backUpFile\0filename\0tcpSendData\0uchar*\0"
+    "txBuf\0len"
 };
 #undef QT_MOC_LITERAL
 
@@ -82,7 +84,7 @@ static const uint qt_meta_data_MySocket[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -90,22 +92,23 @@ static const uint qt_meta_data_MySocket[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    4,   84,    2, 0x06 /* Public */,
+       1,    4,   89,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       7,    0,   93,    2, 0x08 /* Private */,
-       8,    0,   94,    2, 0x08 /* Private */,
-       9,    0,   95,    2, 0x08 /* Private */,
-      10,    0,   96,    2, 0x08 /* Private */,
-      11,    1,   97,    2, 0x08 /* Private */,
-      14,    3,  100,    2, 0x08 /* Private */,
-      17,    2,  107,    2, 0x08 /* Private */,
-      20,    2,  112,    2, 0x08 /* Private */,
-      21,    3,  117,    2, 0x08 /* Private */,
-      23,    2,  124,    2, 0x08 /* Private */,
-      24,    0,  129,    2, 0x08 /* Private */,
-      25,    1,  130,    2, 0x08 /* Private */,
-      27,    2,  133,    2, 0x08 /* Private */,
+       7,    0,   98,    2, 0x08 /* Private */,
+       8,    0,   99,    2, 0x08 /* Private */,
+       9,    0,  100,    2, 0x08 /* Private */,
+      10,    0,  101,    2, 0x08 /* Private */,
+      11,    1,  102,    2, 0x08 /* Private */,
+      14,    3,  105,    2, 0x08 /* Private */,
+      17,    2,  112,    2, 0x08 /* Private */,
+      20,    2,  117,    2, 0x08 /* Private */,
+      21,    2,  122,    2, 0x08 /* Private */,
+      22,    3,  127,    2, 0x08 /* Private */,
+      24,    2,  134,    2, 0x08 /* Private */,
+      25,    0,  139,    2, 0x08 /* Private */,
+      26,    1,  140,    2, 0x08 /* Private */,
+      28,    2,  143,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString, QMetaType::UShort, QMetaType::QStringList, QMetaType::UShort,    3,    4,    5,    6,
@@ -119,11 +122,12 @@ static const uint qt_meta_data_MySocket[] = {
     QMetaType::Void, QMetaType::UShort, QMetaType::UChar, QMetaType::QVariant,    4,   15,   16,
     QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   18,   19,
     QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   18,   19,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UShort,   18,   19,   22,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   18,   19,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UShort,   18,   19,   23,
     QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   18,   19,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   26,
-    QMetaType::Void, 0x80000000 | 28, QMetaType::UShort,   29,   30,
+    QMetaType::Void, QMetaType::QString,   27,
+    QMetaType::Void, 0x80000000 | 29, QMetaType::UShort,   30,   31,
 
        0        // eod
 };
@@ -141,13 +145,14 @@ void MySocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         case 4: _t->recvData(); break;
         case 5: _t->recvDataMethod((*reinterpret_cast< const uchar*(*)>(_a[1]))); break;
         case 6: _t->slotDataSent((*reinterpret_cast< ushort(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QVariant(*)>(_a[3]))); break;
-        case 7: _t->cmdBootConnect((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
-        case 8: _t->bootEraseAppSectors((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
-        case 9: _t->bootWriteAppdata((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< ushort(*)>(_a[3]))); break;
-        case 10: _t->bootJumpToApp((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
-        case 11: _t->readBackLcformerApp(); break;
-        case 12: _t->backUpFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 13: _t->tcpSendData((*reinterpret_cast< uchar*(*)>(_a[1])),(*reinterpret_cast< const ushort(*)>(_a[2]))); break;
+        case 7: _t->cmdConnectTarget((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
+        case 8: _t->cmdAppJumpBoot((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
+        case 9: _t->bootEraseAppSectors((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
+        case 10: _t->bootWriteAppdata((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< ushort(*)>(_a[3]))); break;
+        case 11: _t->bootJumpToApp((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
+        case 12: _t->readBackLcformerApp(); break;
+        case 13: _t->backUpFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 14: _t->tcpSendData((*reinterpret_cast< uchar*(*)>(_a[1])),(*reinterpret_cast< const ushort(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -187,13 +192,13 @@ int MySocket::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 15)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }

@@ -38,7 +38,8 @@ private slots:
     void recvDataMethod(const uchar *data);
 
     void  slotDataSent(ushort cmd,uchar type,QVariant variant); //
-    void  cmdBootConnect(uchar target,  uchar addr);  //给中位机发送boot联机
+    void  cmdConnectTarget(uchar target,  uchar addr);  //pc与target 建立 联机
+    void  cmdAppJumpBoot(uchar target,  uchar addr);  //给中位机发送跳转boot
     void  bootEraseAppSectors(uchar target,  uchar addr);   //擦除指定扇区
     void bootWriteAppdata(uchar target,  uchar addr,ushort txframeIndex);//下发中位机boot升级数据
     void bootJumpToApp(uchar target,  uchar addr); //    中位机boot跳转到app运行
@@ -65,7 +66,9 @@ private:
     enum
     {
         reConnect = 0x01,  //掉线重联
-        bootConnect,  //app跳转boot
+
+        targetConnect,  //与目标板建立联机,,,,
+        appJumpBoot,   //app跳转到boot
         eraseApp, //扇区擦除
         appDataWrite,  //下发app数据
         bootJumpApp  , //boot跳转app

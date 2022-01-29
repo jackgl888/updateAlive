@@ -1127,6 +1127,7 @@ void pcbaTest::saveBtnClickedSlot()
      this->msgBrowser->append(str);
      str=QString("%1%2").arg(time).arg("请扫码");
      this->msgBrowser->append(str);
+
 }
 
 

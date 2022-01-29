@@ -81,7 +81,7 @@ Myserial::Myserial(QString ip, updateTarget target, QObject *parent):
     resendMutex = true;
     m_target = target;
     myAddr = ip;
-    m_update = bootConnect;
+    m_update =  targetConnect ;
     m_addr = 0;
     lcAddrIndex = 0;
     resendTimes = 0;
@@ -120,7 +120,7 @@ void Myserial::recvDataMethod( const uchar *data)
 
     switch (cmd) {
 
-    case    LCBOOTCONNECT:        //boot联机 回复
+    case      PCCONNECTLC  :        //boot联机 回复
         lcAddrIndex++;
 
         lcBootReplyConnectAnalysis(data);
@@ -311,10 +311,7 @@ void Myserial::slotDataSent(ushort cmd, uchar type, QVariant variant)
         msg.append(tr);
         emit sigRunMsgToUi(myAddr,GETAPPFILE ,msg,0);
         break;
-    case BOOTCONNECT :  //搜箱
-        m_update = bootConnect;
-        m_timer->start(RESENDTIME);
-        break;
+
 
     default:
         break;
@@ -338,7 +335,7 @@ void Myserial::conncetToLcBoot(uchar target,uchar addr)
     memset(txBuf,0,SEND_BUFF_LEN);
     txBuf[0]=0x5A;
     txBuf[1]= addr;   //板卡地址
-    txBuf[2]= LCBOOTCONNECT;
+    txBuf[2]=   PCCONNECTLC  ;
     txBuf[3]= txLen-8;
     txBuf[4]=(uchar)((txLen-8)>>8);
     txBuf[5]=target;
@@ -396,7 +393,7 @@ void Myserial::lcBootReplyConnectAnalysis(const uchar *data)
     uchar addr = *(data+1);    //层地址
     msg.append("BOOT");
     msg.append("已跳入boot");
-    emit sigRunMsgToUi(myAddr,BOOTCONNECT,msg,addr);
+    emit sigRunMsgToUi(myAddr,   CONNECTTARGET ,msg,addr);
 }
 
 
@@ -511,7 +508,7 @@ void Myserial::timeoutMethod(void)
     switch (m_update)
     {
 
-    case bootConnect:        //boot联机
+    case    CONNECTTARGET :        //boot联机
         if(resendTimes<3)
             conncetToLcBoot(m_target,m_addr);
         else
@@ -526,7 +523,7 @@ void Myserial::timeoutMethod(void)
 
                 msg.append("BOOT");
                 msg.append("boot跳转已完成");
-                emit sigRunMsgToUi(myAddr,BOOTCONNECT,msg,100);
+                emit sigRunMsgToUi(myAddr,   CONNECTTARGET ,msg,100);
 
             }
             else

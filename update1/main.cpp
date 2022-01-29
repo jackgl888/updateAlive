@@ -18,14 +18,14 @@ int main(int argc, char *argv[])
     QFont font("AR PL KaitiM GB",9);
     a.setFont(font);
 
-   qDebug()<<"main thread:"<<QThread::currentThreadId();
+ //  qDebug()<<"main thread:"<<QThread::currentThreadId();
     Mlogin loginDlg;
     projectWidget  w;
 //  Widget w ;
 //  w.show();
   w.show();
   return a.exec();
-#if 1
+#if 0
         if (loginDlg.exec() == QDialog::Accepted)
        {
              Widget w ;

@@ -67,10 +67,13 @@ private:
 
     enum
     {
-        bootConnect=1,//boot联,机
+        targetConnect,  //与目标板建立联机,,,,
+        appJumpBoot,   //app跳转到boot
         eraseApp, //扇区擦除
         appDataWrite,  //下发app数据
-        bootJumpApp   //boot跳转app
+        bootJumpApp  , //boot跳转app
+        bootBackupApp     //boot读取之前的app备份
+
     }m_update;
 
 

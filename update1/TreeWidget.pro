@@ -40,6 +40,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     myserial.cpp \
+    qiplinediter.cpp \
        widget.cpp \
     serverthread.cpp \
     login.cpp \
@@ -57,6 +58,7 @@ HEADERS  +=   widget.h \
     myserial.h \
      mysocket.h \
     projectwidget.h \
+    qiplinediter.h \
     server.h \
     serverthread.h \
     login.h \

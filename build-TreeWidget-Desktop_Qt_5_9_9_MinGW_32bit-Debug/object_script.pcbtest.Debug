@@ -1,6 +1,7 @@
 INPUT(
 ./debug\main.o
 ./debug\myserial.o
+./debug\qiplinediter.o
 ./debug\widget.o
 ./debug\serverthread.o
 ./debug\login.o
@@ -15,6 +16,7 @@ INPUT(
 ./debug\moc_myserial.o
 ./debug\moc_mysocket.o
 ./debug\moc_projectwidget.o
+./debug\moc_qiplinediter.o
 ./debug\moc_server.o
 ./debug\moc_serverthread.o
 ./debug\moc_login.o

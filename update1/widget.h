@@ -33,7 +33,7 @@
 #include <QCheckBox>
 #include <QHostInfo>
 #include "struct.h"
-
+#include "qiplinediter.h"
 class serverThread ;
 
 #define  PROBARCOlUMN    3       //进度条所在列
@@ -59,12 +59,8 @@ public:
     void initModel();   //模型初始化
     void initTable();  //表格初始化
 
-    void cfgBoxInit(); //配置控件及布局初始化
-    void initDeviceBox();  //设备选择框
-    void initUpdateBtn();  //升级按钮初始化
-    void initPortAndIp();  //初始化端口与ip控件
-    void initCfgBtn();  //
-    void initSerialUi();  //串口相关ui初始化
+    void  openfile( QString filename);
+
     void bottomLayOutCtrlInit(void); //右边布局
 
     void updateChild(QTreeWidgetItem *item);  //更新子节点
@@ -79,65 +75,49 @@ private:
 
 
     //中间布局
+
     QVBoxLayout  *topLayout;
     QTableView  * msgTable;//信息显示表
     pgbarDelegate *  progressBarDelegate;  //进度条的代理
     QStandardItemModel  *msgModle;  //
     uchar   rows; //model的行
 
-
-    QLabel  *pathLab;  //
     QLineEdit  * pathEdit; //文件路径显示
     QPushButton * fileOpen;
     QHBoxLayout *pathlayout;
-
-
 
     //左边布局
     QVBoxLayout  *leftLayout;//节点树布局
     QTreeWidget   *trayTree; //节点树
 
      //下边布局
-    QVBoxLayout  * rightBottomLayout ; //右下边布局
+
     QHBoxLayout  *bottomLayout;     //左下边布局
     QPushButton  *updateBtn;  //升级按键
-    QVBoxLayout  *updateBtnLayout;
-    QGroupBox *updateBtnBox ;
 
     QTextBrowser  *msgBox;
     QGroupBox     *mannualUpateBox;  //手动升级
-    QPushButton *clearBtn;   //
-    QPushButton  *jumpBtn;   //跳转
-    QPushButton  *appSendBtn;//手动下发APP数据
-    QPushButton  *eraseBtn;  //擦除按钮
-    QPushButton  *bootConnBtn;   //boot联机
+
+   QStringList  mcIplist;    //mciplist
+   QPushButton *mcipCfgBtn;  //mcIP配置按钮
+   QGroupBox  *mcipCfgBox;   //
+   QIPlinEditer *m_ipEdit;     //ip输入
+   QSpinBox   *targetPort;   //目标端口
+
+   QPushButton * cfgBtn;    //配置网络通信方式
 
 
-
-    QPushButton * cfgBtn;    //配置网络通信方式
-    QHBoxLayout  *setNetLayout;
-    QGroupBox *netConfigBox ;
-
-
-
-    QLabel  *portLab;  //ip与端口
-    QSpinBox  *portbox;
     QComboBox *ipbox;
-    QLabel    *m_editerLab;  //绑定IP
+    QSpinBox  *portbox;
+
+
     QHBoxLayout  *portLayout;
-    QVBoxLayout * netLayout;
     QHBoxLayout  *m_editerLayout;
 
-
-    QLabel *serialLab;
+    QCheckBox *serialCheckBox;
     QComboBox *serialBox;   //串口名
-    QGroupBox  *serialGpBox;
 
-
-    QLabel  *machineLab;  //设备选择框
     QComboBox  *deviceBox;
-    QHBoxLayout *machineLayout;
-
 
     QTimer  *m_timer;
     serverThread  *thread;
@@ -170,6 +150,7 @@ private slots:
     void clientThreadInit(QString myIp,QString  mcId,  bool isNet, ushort myPort,updateTarget target);//创建中位机线程
 
 
+     void openCfgSlot(void);
     void on_openfile_clicked();   //打开文件
     void cfgBtnClickedSlot(void);   //配置
     void updateBtnClickedSlot(void);    //升级按键的槽
@@ -178,6 +159,7 @@ private slots:
     void appSendBtnClickedSlot(void); //手动下发
     void eraseBtnClickedSlot(void); //擦除
     void bootConnBtnClickedSlot(void); //手动搜箱
+    void mcipCfgBtnClickedSlot(void);  //mcip配置
 
     //running msg
     void slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, ushort value);

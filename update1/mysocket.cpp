@@ -76,9 +76,9 @@ MySocket::MySocket( QString mcIp,   updateTarget target,QObject *parent) : QTcpS
     m_box = 0;
     lcAddrIndex = 0;
     resendTimes = 0;
-     m_checkBuf.rxTimes = 0;
-     m_checkBuf.txTimes = 0;
-     m_checkBuf.checkedRxtimes = 0;
+    m_checkBuf.rxTimes = 0;
+    m_checkBuf.txTimes = 0;
+    m_checkBuf.checkedRxtimes = 0;
     resendMutex = true;
     hostAddr = mcIp;
     this->m_timer = new QTimer(this);
@@ -111,7 +111,7 @@ void MySocket::slotConnected()
 
     hostPort = this->peerPort();
     resendTimes = 0;
-    m_update=    bootConnect;
+    m_update=   targetConnect;
 
     m_timer->start(CONNTIME );
     //   connect(this, SIGNAL(readyRead()), this, SLOT(recvData()));
@@ -186,16 +186,42 @@ void MySocket::slotDataSent(ushort cmd, uchar type,QVariant variant)
         msg.append(tr);
         emit sigRunMsgToUi(hostAddr,GETAPPFILE ,msg,0);
         break;
-    case BOOTCONNECT :  //搜箱
-        m_update =  bootConnect;
-        m_timer->start(RESENDTIME);
-        break;
+
 
     default:
         break;
     }
 
 
+}
+
+
+
+//pc 与target 建立 联机
+void MySocket::cmdConnectTarget(uchar target, uchar addr)
+{
+    ushort chkSum;
+    uint   txLen;
+    txLen =15;
+    memset(txBuf,0,SEND_BUFF_LEN);
+    for(uchar i= 0;i<2;i++)
+        txBuf[i]=0xAA;
+    txBuf[2]=txLen-4;
+    txBuf[3]=(uchar)((txLen-4)>>8);
+    txBuf[4]=(uchar)((txLen-4)>>16);
+    txBuf[5]=(uchar)((txLen-4)>>24);
+    txBuf[6]= addr; //
+    txBuf[7]=   (uchar) CONNECTTARGET;
+    txBuf[8]=  CONNECTTARGET>>8;
+    txBuf[9]= target ;   //设备类型
+    txBuf[10]= addr ;   //设备层数
+    chkSum = checksum(&txBuf[2], txLen-6);
+    txBuf[11]= chkSum;
+    txBuf[12]=(uchar)( chkSum>>8);
+    txBuf[13]=0xBB;
+    txBuf[14]=0xBB;   //加密
+
+    this->write(reinterpret_cast<char *>(txBuf),txLen);
 }
 
 
@@ -211,13 +237,13 @@ void MySocket::  timeoutMethod(void)
         this->abort();
         this->connectToHost(hostAddr,MCPORT);
         break;
-    case bootConnect:          //BOOT联机
+    case  targetConnect:          //与target建立 联机
 
         if(m_target == POWERMASTER)
         {
             if(resendTimes<3)
             {
-                cmdBootConnect(m_target,m_box);
+                cmdConnectTarget(m_target,m_box);
             }
             else
             {
@@ -229,20 +255,20 @@ void MySocket::  timeoutMethod(void)
                     m_box =100;
                     resendTimes =3;
                     lcAddrIndex=POWERNUM;
-                    cmdBootConnect(m_target,   m_box );
+                    cmdAppJumpBoot(m_target,   m_box );
 
                 }
                 else
                 {
                     m_box = lcAddrIndex;
-                    cmdBootConnect(m_target,m_box);
+                    cmdAppJumpBoot(m_target,m_box);
                 }
             }
         }
         else   //MC
         {
             if(resendTimes<20)
-                cmdBootConnect(m_target,m_box);
+                cmdAppJumpBoot(m_target,m_box);
             else
             {
                 this->m_timer->stop();
@@ -267,7 +293,7 @@ void MySocket::  timeoutMethod(void)
                     lcAddrIndex =m_powerList.count();
                     //                m_addr =m_powerList.at(lcAddrIndex);
                     //                  lcbootWriteAppdata(m_target,m_addr,0);
-                    m_update = bootConnect;
+                    m_update =  targetConnect;
                 }
             }
 
@@ -276,31 +302,31 @@ void MySocket::  timeoutMethod(void)
             bootEraseAppSectors(m_target,m_box);
         break;
     case  appDataWrite:      //写入升级数据
-//        if(resendTimes>3)
-//        {
-//            resendTimes = 0;
-//            if(m_target == POWERMASTER)
-//            {
-//                lcAddrIndex++;
-//                if(lcAddrIndex<m_powerList.count())
-//                {
-//                    m_box =m_powerList.at(lcAddrIndex);
-//                    bootWriteAppdata(m_target,m_box, 0);
-//                }
-//                else
-//                {
+        //        if(resendTimes>3)
+        //        {
+        //            resendTimes = 0;
+        //            if(m_target == POWERMASTER)
+        //            {
+        //                lcAddrIndex++;
+        //                if(lcAddrIndex<m_powerList.count())
+        //                {
+        //                    m_box =m_powerList.at(lcAddrIndex);
+        //                    bootWriteAppdata(m_target,m_box, 0);
+        //                }
+        //                else
+        //                {
 
-//                    resendTimes = 3;
-//                    bootWriteAppdata(m_target,m_box, 0);
+        //                    resendTimes = 3;
+        //                    bootWriteAppdata(m_target,m_box, 0);
 
 
-//                }
-//            }
-//            m_timer->stop();
-//        }
-//        else
-                  // if(writeMutex == false)
-                   bootWriteAppdata(m_target,m_box, txIndex);
+        //                }
+        //            }
+        //            m_timer->stop();
+        //        }
+        //        else
+        // if(writeMutex == false)
+        bootWriteAppdata(m_target,m_box, txIndex);
         break;
     default:
         break;
@@ -334,7 +360,7 @@ void MySocket::recvData(void)
     memcpy(buf,array.data(),array.length());
     ushort    cmd = *(buf+7)|*(buf+8)<<8;  //命令字
     if(cmd==   BOOTWRITEDATA )
-    m_checkBuf.rxTimes++;
+        m_checkBuf.rxTimes++;
     for(ushort i=0;i<array.length();i++)
     {
 
@@ -425,7 +451,7 @@ void MySocket::recvDataMethod(const uchar * data)
 
     if(chkSum!=chkSumRecv )
         return;
- //   resendTimes =0;
+    //   resendTimes =0;
 
     addr= *(data+10);
     cmd = *(data+7)|*(data+8)<<8;  //命令字
@@ -433,7 +459,7 @@ void MySocket::recvDataMethod(const uchar * data)
     result= *(data+11) ;
     switch (cmd) {
 
-    case    BOOTCONNECT :      //BOOT联机
+    case     CONNECTTARGET :      //BOOT联机
         if(( result == 0)&&(m_target == MCTRANSMIT )) //是中位机回复，则断开,准备与boot联机
         {
             this->disconnectFromHost();
@@ -444,14 +470,14 @@ void MySocket::recvDataMethod(const uchar * data)
             msg.append("BOOT");
             tr = QString("%1%2").arg(QString::number(addr)).arg( "app跳转boot完成，联机boot...") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,  BOOTCONNECT,msg,100);
+            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,100);
         }
         else if (( result == 0)&&(m_target ==POWERMASTER))   //下位机跳转成功
         {
             msg.append("BOOT");
             tr = QString("%1%2").arg(QString::number(addr)).arg( "app跳转boot完成，联机boot...") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,  BOOTCONNECT,msg,addr);
+            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,addr);
         }
         else if(( result == 1)&&(m_target ==POWERMASTER))//下位机跳转成功
         {
@@ -473,8 +499,8 @@ void MySocket::recvDataMethod(const uchar * data)
                 {
                     m_box = 100;
                     lcAddrIndex =m_powerList.count();
-                    cmdBootConnect(m_target,m_box);
-                    m_update = bootConnect;
+                    cmdAppJumpBoot(m_target,m_box);
+                    m_update =  targetConnect;
                     //   m_update = appDataWrite;
                 }
                 ip = QString("%1%2%3").arg(hostAddr).arg(".").arg(QString::number(m_box ));
@@ -483,8 +509,8 @@ void MySocket::recvDataMethod(const uchar * data)
             {
                 // m_timer->stop();
                 ip = hostAddr;
-                cmdBootConnect(m_target,m_box);
-                m_update =  bootConnect;
+                cmdAppJumpBoot(m_target,m_box);
+                m_update =   targetConnect;
             }
             msg.append("BOOT");
             tr =  QString("%1%2").arg( ip).arg("flash擦除成功") ;
@@ -504,7 +530,7 @@ void MySocket::recvDataMethod(const uchar * data)
         }
         break;
     case BOOTWRITEDATA:      //app写数据
-      m_checkBuf.checkedRxtimes++;
+        m_checkBuf.checkedRxtimes++;
         txIndex= *(data+13)|*(data+14)<<8;
         flag = *(data+15);
         if(  flag =='O')  //升级成功
@@ -600,8 +626,8 @@ void MySocket::recvDataMethod(const uchar * data)
 
 
 
-//给app发送boot跳转
-void MySocket::cmdBootConnect(uchar target,  uchar addr)
+//给app发送跳转boot
+void MySocket::cmdAppJumpBoot(uchar target,  uchar addr)
 {
 
     ushort chkSum;
@@ -609,23 +635,21 @@ void MySocket::cmdBootConnect(uchar target,  uchar addr)
     txLen =15;
     memset(txBuf,0,SEND_BUFF_LEN);
     for(uchar i= 0;i<2;i++)
-        txBuf[i]=0xEF;
+        txBuf[i]=0xAA;
     txBuf[2]=txLen-4;
     txBuf[3]=(uchar)((txLen-4)>>8);
     txBuf[4]=(uchar)((txLen-4)>>16);
     txBuf[5]=(uchar)((txLen-4)>>24);
     txBuf[6]= addr; //
-    txBuf[7]=   (uchar)BOOTCONNECT;
-    txBuf[8]=   BOOTCONNECT>>8;
+    txBuf[7]=   (uchar)APPJUMPBOOT;
+    txBuf[8]= APPJUMPBOOT>>8;
     txBuf[9]= target ;   //设备类型
     txBuf[10]= addr ;   //设备层数
     chkSum = checksum(&txBuf[2], txLen-6);
     txBuf[11]= chkSum;
     txBuf[12]=(uchar)( chkSum>>8);
-    txBuf[13]=0xee;
-    txBuf[14]=0xee;   //加密
-
-
+    txBuf[13]=0xBB;
+    txBuf[14]=0xBB;   //加密
 
     this->write(reinterpret_cast<char *>(txBuf),txLen);
 
@@ -694,8 +718,8 @@ void MySocket::bootJumpToApp(uchar target,  uchar addr)
     txBuf[4]=(uchar)((txLen-4)>>16);
     txBuf[5]=(uchar)((txLen-4)>>24);
     txBuf[6]= 0;
-    txBuf[7]= (uchar)BOOTJUMP ;
-    txBuf[8]= BOOTJUMP>>8;
+    txBuf[7]= (uchar)BOOTJUMPAPP  ;
+    txBuf[8]=BOOTJUMPAPP >>8;
     txBuf[9]=target ;
     txBuf[10]=addr ;//设备层数
     chkSum = checksum(&txBuf[2], txLen-6);

@@ -15,29 +15,32 @@
 #define  RESENDTIME             1000   //重发时间间隔
 #define  SEND_BUFF_LEN          2000
 #define  RECV_BUFF_LEN          2000
-
+#define  mcipListPath           "./ipcfig.txt"
 
 
 
 enum  updateCmd{
 
-                 BOOTCONNECT = 0x0601,        //BOOT跳转
-                 ERASESECTOR = 0x0603,          //擦除扇区
-                 BOOTWRITEDATA =  0x0604,        //写APP数据
-                 BOOTJUMP =  0x0605,              //BOOT跳转到APP
+                 CONNECTTARGET = 0X0401,      //与目标板建立联机
+                 APPJUMPBOOT ,        //BOOT跳转
+                 ERASESECTOR ,          //擦除扇区
+                 BOOTWRITEDATA ,        //写APP数据
+                 BOOTJUMPAPP ,              //BOOT跳转到APP
                  BACKUPAPP,             //备份之前的APP数据
                  GETAPPFILE,           //从主线程获得APP文件
-                 NETLOST ,              //tcp掉线
+                 NETLOST ,              //tcp掉线,,
 
                  MANUALSENDDATA,        //手动升级APP
                  MANUALERASE            //手动擦除
     };
 
 enum   lcUpdateCmd{
-          LCBOOTCONNECT = 0X51,
-          LCERASESECTOR = 0X53,
-          LCBOOTWRITEDATA= 0X54,
-          LCBOOTJUMPAPP  = 0X55
+
+          PCCONNECTLC   = 0X41,
+          LCJUMPBOOT ,
+          LCERASESECTOR ,
+          LCBOOTWRITEDATA,
+          LCBOOTJUMPAPP
 
 };
 

@@ -1,6 +1,7 @@
 INPUT(
 ./release\main.o
 ./release\myserial.o
+./release\qiplinediter.o
 ./release\widget.o
 ./release\serverthread.o
 ./release\login.o
@@ -15,6 +16,7 @@ INPUT(
 ./release\moc_myserial.o
 ./release\moc_mysocket.o
 ./release\moc_projectwidget.o
+./release\moc_qiplinediter.o
 ./release\moc_server.o
 ./release\moc_serverthread.o
 ./release\moc_login.o

@@ -46,6 +46,7 @@ void QIPlinEditer::setText(const QString &strIP)
         }
 }
 
+
 QString QIPlinEditer::text() const
 {
     QString strIP;

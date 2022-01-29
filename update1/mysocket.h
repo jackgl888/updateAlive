@@ -15,7 +15,7 @@ class MySocket : public QTcpSocket
 {
     Q_OBJECT
 public:
-    explicit MySocket( QString mcIp,   updateTarget target,   QObject *parent = Q_NULLPTR);
+    explicit MySocket( QString mcIp, uint mcPort , updateTarget target,    QObject *parent = Q_NULLPTR);
     ~MySocket();
 
 
@@ -41,8 +41,8 @@ private slots:
     void  cmdConnectTarget(uchar target,  uchar addr);  //pc与target 建立 联机
     void  cmdAppJumpBoot(uchar target,  uchar addr);  //给中位机发送跳转boot
     void  bootEraseAppSectors(uchar target,  uchar addr);   //擦除指定扇区
-    void bootWriteAppdata(uchar target,  uchar addr,ushort txframeIndex);//下发中位机boot升级数据
-    void bootJumpToApp(uchar target,  uchar addr); //    中位机boot跳转到app运行
+    void  bootWriteAppdata(uchar target,  uchar addr,ushort txframeIndex);//下发中位机boot升级数据
+    void  bootJumpToApp(uchar target,  uchar addr); //    中位机boot跳转到app运行
 
     void  readBackLcformerApp(void);  //读取回之前的下位机APP进行备份
     void  backUpFile(QString  filename);     //读回升级备份
@@ -57,7 +57,7 @@ private:
      uchar  m_box;     //正在升级的下位机地址
      uchar  lcAddrIndex;    //地址序列
       uchar resendTimes ;    //重发次数
-       bool  resendMutex;        //重发互斥
+
       QTimer * m_timer;   //
 
     uchar recvbuf[RECV_BUFF_LEN ];  //接收数据
@@ -98,6 +98,14 @@ private:
         ushort rxTimes;
         ushort checkedRxtimes;
    }m_checkBuf;
+
+
+   struct
+   {
+       ushort mcVersion;
+       uchar lcNum;  //电源下位机数量
+       LcMsg m_lcMsg[10];
+   }powerMsg;
 
 };
 

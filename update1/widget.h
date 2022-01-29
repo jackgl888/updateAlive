@@ -147,18 +147,20 @@ private slots:
     void timeoutEventMethod(void); //定时超时方法
     void getLocalHostIp();  //获取本机ip
 
-    void clientThreadInit(QString myIp,QString  mcId,  bool isNet, ushort myPort,updateTarget target);//创建中位机线程
+    void clientThreadInit(QString myIp,QString  mcId,  bool isNet, ushort myPort,ushort mcPort, updateTarget target);//创建中位机线程
 
 
      void openCfgSlot(void);
     void on_openfile_clicked();   //打开文件
-    void cfgBtnClickedSlot(void);   //配置
+    void cfgBtnClickedSlot(void);   //连接中位机tcp
     void updateBtnClickedSlot(void);    //升级按键的槽
+
     void clearBtnClickedSlot(void);
-    void jumpBtnClickedSlot(void);//跳转
+
+
     void appSendBtnClickedSlot(void); //手动下发
     void eraseBtnClickedSlot(void); //擦除
-    void bootConnBtnClickedSlot(void); //手动搜箱
+
     void mcipCfgBtnClickedSlot(void);  //mcip配置
 
     //running msg

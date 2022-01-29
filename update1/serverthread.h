@@ -16,7 +16,7 @@ class serverThread : public QThread
 {
     Q_OBJECT
 public:
-    serverThread(QString ip,  QString mcId, int sockDesc, bool isNet, updateTarget target,   QObject *parent = Q_NULLPTR);
+    serverThread(QString ip,  QString mcId, uint sockDesc,uint mcSockDesc, bool isNet, updateTarget target,   QObject *parent = Q_NULLPTR);
     ~serverThread();
 
 
@@ -41,7 +41,8 @@ private:
     void run(void);
     MySocket *m_socket;
      Myserial *m_serial;
-    int m_sockDesc;
+    uint m_sockDesc;
+    uint m_mcSockDesc;
     updateTarget  m_target;
     QString  m_ip;   //电脑IP
     QString  m_mcId;  //中位机IP

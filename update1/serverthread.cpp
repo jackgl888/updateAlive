@@ -5,15 +5,17 @@
 
 
 
-serverThread::serverThread(QString ip, QString mcId, int sockDesc,bool isNet, updateTarget target, QObject *parent) :
+serverThread::serverThread(QString ip, QString mcId, uint sockDesc,uint mcSockDesc, bool isNet, updateTarget target, QObject *parent) :
     QThread(parent),
-    m_sockDesc(sockDesc)
+    m_sockDesc(sockDesc),
+    m_mcSockDesc(mcSockDesc)
 
 {
      m_target = target;
      this->m_ip = ip;
      m_isNet = isNet;
     m_mcId = mcId;
+
 }
 
 
@@ -26,7 +28,6 @@ serverThread::~serverThread()
    else
        delete  m_serial;
 
-
 }
 
 void serverThread::run(void)
@@ -34,11 +35,11 @@ void serverThread::run(void)
 
       if(m_isNet == true)
       {
-          m_socket = new MySocket(m_mcId,  m_target);
+          m_socket = new MySocket(m_mcId, m_mcSockDesc, m_target);
 
           m_socket->bind(QHostAddress(m_ip),m_sockDesc);
           m_socket->abort();
-          m_socket->connectToHost(m_mcId,MCPORT);   //
+          m_socket->connectToHost(m_mcId,m_mcSockDesc);   //
           m_socket->moveToThread(this);
 
           //回传  running msg

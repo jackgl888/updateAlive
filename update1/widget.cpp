@@ -428,11 +428,7 @@ void Widget::clearBtnClickedSlot()
 }
 
 
-//跳转
-void Widget::jumpBtnClickedSlot()
-{
-    ;
-}
+
 
 
 // 手动下发
@@ -550,11 +546,7 @@ void Widget::eraseBtnClickedSlot()
 }
 
 
-//手动搜箱
-void Widget::bootConnBtnClickedSlot()
-{
-    sigdatasent(MANUALERASE,MCTRANSMIT,0);
-}
+
 
 
 //配置mcip
@@ -568,7 +560,10 @@ void Widget::mcipCfgBtnClickedSlot()
 
         QTextStream   out(&file);
         text = QString("%1%2%3").arg(m_ipEdit->text()).arg(",").arg(QString::number( targetPort->value()));
+        if(mcIplist.contains( text)!=true)
         out<<text<<endl;
+        else
+       QMessageBox::information(NULL, "Title", "IP已经存在！");
 
     }
     file.close();
@@ -867,7 +862,7 @@ void Widget::bottomLayOutCtrlInit()
        QLabel  *portLab=new QLabel("端口：",this);
        targetPort = new QSpinBox(this);
        targetPort->setMaximum(65535);
-       targetPort->setValue(10002);
+       targetPort->setValue(10001);
 
        QHBoxLayout *ipLayout = new QHBoxLayout();
        QHBoxLayout  *portLayout = new QHBoxLayout();
@@ -909,8 +904,8 @@ void Widget::bottomLayOutCtrlInit()
     bottomLayout->addWidget(msgBox);
     bottomLayout->addLayout( rightBottomLayout);
     connect(this->fileOpen,SIGNAL(clicked()),this,SLOT(on_openfile_clicked()));  //打开升级文件
-    connect(cfgBtn,SIGNAL(clicked()),this,SLOT(cfgBtnClickedSlot()));    //配置
-
+    connect(cfgBtn,SIGNAL(clicked()),this,SLOT(cfgBtnClickedSlot()));    //连接tcp中位机
+    connect(mcipCfgBtn,SIGNAL(clicked()),this,SLOT(mcipCfgBtnClickedSlot())); //配置中位机ip
     connect(this->updateBtn,SIGNAL(clicked()),this,SLOT(updateBtnClickedSlot()));    //执行具体升级过程
 
 }
@@ -1025,7 +1020,6 @@ void Widget::openfile( QString filename)
                 line = stream.readLine();
                 if(!line.isEmpty())
                 {
-                    if(mcIplist.contains(line)!=true)
                         mcIplist.append(line);
                 }
 
@@ -1063,7 +1057,8 @@ void Widget::cfgBtnClickedSlot()
         if(this->serialCheckBox->isChecked()==true)  //串口通信
         {
             ip =   this->serialBox->currentText();
-            clientThreadInit(ip,0, false, port,POWERMASTER) ;
+            port = portbox->value();
+            clientThreadInit(ip,0, false, port,0,POWERMASTER) ;
         }
         else
         {
@@ -1074,7 +1069,7 @@ void Widget::cfgBtnClickedSlot()
                     for(uchar i = 0;i<mcIplist.count();i++)
                     {
                           QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
-                          clientThreadInit(ip, mcIplist.value(0), true, mcIplist.value(1).toUShort(), MCTRANSMIT) ;
+                          clientThreadInit(ip, mcIplist.value(0), true, port, mcIplist.value(1).toUShort(), MCTRANSMIT) ;
                     }
                 }
                 else
@@ -1089,7 +1084,7 @@ void Widget::cfgBtnClickedSlot()
                       for(uchar i = 0;i<mcIplist.count();i++)
                       {
                             QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
-                            clientThreadInit(ip, mcIplist.value(0), true, mcIplist.value(1).toUShort(), POWERMASTER) ;
+                            clientThreadInit(ip, mcIplist.value(0), true, port,mcIplist.value(1).toUShort(), POWERMASTER) ;
                       }
                   }
                   else
@@ -1110,15 +1105,15 @@ void Widget::cfgBtnClickedSlot()
 
 
 //
-void Widget::clientThreadInit(QString myIp, QString  mcId, bool isNet, ushort myPort,updateTarget target)
+void Widget::clientThreadInit(QString myIp, QString  mcId, bool isNet, ushort myPort,ushort mcPort, updateTarget target)
 {
     
-    serverThread  *thread = new serverThread(myIp,mcId, isNet,myPort,target,this);
+    serverThread  *thread = new serverThread(myIp,mcId, isNet,myPort, mcPort ,target,this);
     connect(this,SIGNAL(sigdatasent(ushort,uchar,QVariant)),thread,SLOT(slotSendUpdateCmd(ushort,uchar,QVariant))); //ui命令到线程
 
     //接收running msg
-    connect(thread,SIGNAL(sigSendRunningMsg(QString,ushort,QStringList,ushort)),this,
-            SLOT(slotRunningMsgProcess(QString,ushort,QStringList,ushort)));
+    connect(thread,SIGNAL(sigSendRunningMsg(QString,ushort,QStringList,ushort)),this, SLOT(slotRunningMsgProcess(QString,ushort,QStringList,ushort)));
+
 
     thread->start();
     

@@ -68,7 +68,7 @@ static  const uchar s_CRCHi[] = {
     0x80, 0x41, 0x00, 0xC1, 0x81, 0x40
 } ;
 
-MySocket::MySocket( QString mcIp,   updateTarget target,QObject *parent) : QTcpSocket(parent)
+MySocket::MySocket( QString mcIp,  uint mcPort, updateTarget target,QObject *parent) : QTcpSocket(parent)
 
 {
     m_target = target;
@@ -79,8 +79,10 @@ MySocket::MySocket( QString mcIp,   updateTarget target,QObject *parent) : QTcpS
     m_checkBuf.rxTimes = 0;
     m_checkBuf.txTimes = 0;
     m_checkBuf.checkedRxtimes = 0;
-    resendMutex = true;
+
     hostAddr = mcIp;
+    hostPort = mcPort;
+    memset(&powerMsg,0,sizeof (powerMsg));  //清0
     this->m_timer = new QTimer(this);
     connect(this, SIGNAL(readyRead()), this, SLOT(recvData()),Qt::QueuedConnection);
     connect(m_timer,SIGNAL(timeout()),this,SLOT(timeoutMethod()));
@@ -107,14 +109,11 @@ void MySocket::slotConnected()
     QStringList  msg;
     QString tr;
 
-
-
-    hostPort = this->peerPort();
     resendTimes = 0;
     m_update=   targetConnect;
 
     m_timer->start(CONNTIME );
-    //   connect(this, SIGNAL(readyRead()), this, SLOT(recvData()));
+
 
 
 }
@@ -150,7 +149,7 @@ void MySocket::slotDataSent(ushort cmd, uchar type,QVariant variant)
     QString  tr;
     updatePara *para;
     targetAddr *addrs;
-    resendMutex = false;
+
     switch (cmd) {
 
 
@@ -228,53 +227,27 @@ void MySocket::cmdConnectTarget(uchar target, uchar addr)
 
 void MySocket::  timeoutMethod(void)
 {
-    QStringList msg;
-    static bool writeMutex= true;
-    resendMutex = true;
+
+  QStringList  msg;
+  QString tr;
+
     switch (m_update)
     {
     case  reConnect:      //client 联机 host
         this->abort();
-        this->connectToHost(hostAddr,MCPORT);
+        this->connectToHost(hostAddr,hostPort);
         break;
     case  targetConnect:          //与target建立 联机
-
-        if(m_target == POWERMASTER)
+        if(resendTimes<3)
+            cmdAppJumpBoot(m_target,m_box);
+        else
         {
-            if(resendTimes<3)
-            {
-                cmdConnectTarget(m_target,m_box);
-            }
-            else
-            {
-                resendTimes = 0;
-                lcAddrIndex++;
-                if(lcAddrIndex>POWERNUM )
-                {
-                    // this->m_timer->stop();
-                    m_box =100;
-                    resendTimes =3;
-                    lcAddrIndex=POWERNUM;
-                    cmdAppJumpBoot(m_target,   m_box );
-
-                }
-                else
-                {
-                    m_box = lcAddrIndex;
-                    cmdAppJumpBoot(m_target,m_box);
-                }
-            }
+            msg.append("APP");
+            msg.append( "与中位机联机失败！") ;
+            emit sigRunMsgToUi(hostAddr, CONNECTTARGET,msg,0);
+            this->m_timer->stop();
         }
-        else   //MC
-        {
-            if(resendTimes<20)
-                cmdAppJumpBoot(m_target,m_box);
-            else
-            {
-                this->m_timer->stop();
 
-            }
-        }
         break;
     case   eraseApp:      //擦除扇区
         if(resendTimes>3)
@@ -366,7 +339,7 @@ void MySocket::recvData(void)
 
         if(m_wait == WAIT_HEAD)  //接收
         {
-            if(buf[i] == 0xEF)
+            if(buf[i] == 0xCC)
             {
                 if(head_cnt == recv_cnt)
                 {
@@ -459,27 +432,38 @@ void MySocket::recvDataMethod(const uchar * data)
     result= *(data+11) ;
     switch (cmd) {
 
-    case     CONNECTTARGET :      //BOOT联机
-        if(( result == 0)&&(m_target == MCTRANSMIT )) //是中位机回复，则断开,准备与boot联机
+    case  CONNECTTARGET :      //BOOT联机
+
+        if(result == 0) //是中位机boot回复
         {
+            msg.append("BOOT");
+            tr = QString("%1%2").arg(QString::number(addr)).arg( "中位机运行boot，需要跳转到app") ;
+            msg.append(tr);
+            emit sigRunMsgToUi(hostAddr,  CONNECTTARGET,msg,100);
             this->disconnectFromHost();
-            return;
+
         }
-        else if(( result == 1)&&(m_target == MCTRANSMIT ))    //是中位机boot回复，界面显示节点
+        else if(result == 1)    //是中位机boot APP回复
         {
+            powerMsg.mcVersion = *(data+12)|(*(data+13)<<8);  //MC  version
+            powerMsg.lcNum = *(data+14); //lc num
+            memcpy(&powerMsg.m_lcMsg,data+15,powerMsg.lcNum*(sizeof (LcMsg)));
             msg.append("BOOT");
             tr = QString("%1%2").arg(QString::number(addr)).arg( "app跳转boot完成，联机boot...") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,100);
+            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,100);c
+
         }
-        else if (( result == 0)&&(m_target ==POWERMASTER))   //下位机跳转成功
+        else if (result == 2)   //中位机在boot内，无法与下位机通信 ，需要跳转
         {
             msg.append("BOOT");
-            tr = QString("%1%2").arg(QString::number(addr)).arg( "app跳转boot完成，联机boot...") ;
+           tr = QString("%1%2").arg(QString::number(addr)).arg( "中位机运行boot，需要跳转到app") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,addr);
+            emit sigRunMsgToUi(hostAddr,  CONNECTTARGET,msg,100);
+            this->disconnectFromHost();
+
         }
-        else if(( result == 1)&&(m_target ==POWERMASTER))//下位机跳转成功
+        else
         {
             ;
         }

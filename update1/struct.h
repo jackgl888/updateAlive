@@ -2,11 +2,11 @@
 #define STRUCT_H
 #include <QObject>
 #include <QHostAddress>
-//# pragma pack(1)
+
 
 
 #define  POWERNUM               3
-#define  MCPORT                 10001
+
 
 #define  APP_SIZE               800000
 #define  WORDNUM                256
@@ -44,7 +44,7 @@ enum   lcUpdateCmd{
 
 };
 
-
+# pragma pack(1)
 typedef   struct
 {
      ushort  txLen;
@@ -164,7 +164,19 @@ typedef   struct {
    uint LimitPara4;
 
 }DebugParameterBitField;
-//#pragma pack()
+
+
+
+typedef   struct
+{
+
+
+        uchar  boxId;
+        ushort boxVersion;
+
+
+}LcMsg;  //整个电源柜的升级信息结构
+#pragma pack()
 
 
 Q_DECLARE_METATYPE(updateTarget)
@@ -175,6 +187,7 @@ Q_DECLARE_METATYPE(LowVoltageDCDCSampleDataStruct)
 Q_DECLARE_METATYPE(DebugParameterBitField)
 Q_DECLARE_METATYPE(targetAddr)
 Q_DECLARE_METATYPE(txNode)
+Q_DECLARE_METATYPE(LcMsg)
 //uint chnlNum:8;
 //uint stepType:8;
 //uint vloopSel:4;

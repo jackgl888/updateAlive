@@ -434,7 +434,7 @@ void MySocket::recvDataMethod(const uchar * data)
 
     case  CONNECTTARGET :      //BOOT联机
 
-        if(result == 0) //是中位机boot回复
+        if(result == 0) //是中位机boot回复 ls
         {
             msg.append("BOOT");
             tr = QString("%1%2").arg(QString::number(addr)).arg( "中位机运行boot，需要跳转到app") ;
@@ -451,7 +451,7 @@ void MySocket::recvDataMethod(const uchar * data)
             msg.append("BOOT");
             tr = QString("%1%2").arg(QString::number(addr)).arg( "app跳转boot完成，联机boot...") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,100);c
+            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,100);
 
         }
         else if (result == 2)   //中位机在boot内，无法与下位机通信 ，需要跳转

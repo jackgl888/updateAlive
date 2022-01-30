@@ -28,7 +28,7 @@ Widget::Widget(QWidget *parent) :  QWidget(parent)
     //支持插放
     this->setAcceptDrops(true);
 
-    openfile(  mcipListPath ); //读取ip到list
+    openfile(  mcipListPath ); //读取ip到list vVLSI
 
     QGridLayout  * mainLayout  = new QGridLayout(this);
 

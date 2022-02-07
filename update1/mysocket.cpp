@@ -82,7 +82,9 @@ MySocket::MySocket( QString mcIp,  uint mcPort, updateTarget target,QObject *par
 
     hostAddr = mcIp;
     hostPort = mcPort;
-    memset(&powerMsg,0,sizeof (powerMsg));  //清0
+
+    updateStart = false;
+
     this->m_timer = new QTimer(this);
     connect(this, SIGNAL(readyRead()), this, SLOT(recvData()),Qt::QueuedConnection);
     connect(m_timer,SIGNAL(timeout()),this,SLOT(timeoutMethod()));
@@ -105,7 +107,6 @@ MySocket::~MySocket()
 void MySocket::slotConnected()
 {
 
-
     QStringList  msg;
     QString tr;
 
@@ -113,8 +114,6 @@ void MySocket::slotConnected()
     m_update=   targetConnect;
 
     m_timer->start(CONNTIME );
-
-
 
 }
 
@@ -152,14 +151,14 @@ void MySocket::slotDataSent(ushort cmd, uchar type,QVariant variant)
 
     switch (cmd) {
 
-
-    case BOOTWRITEDATA :  //自动发送升级数据
+    case  APPJUMPBOOT :  //自动发送升级数据
         addrs = ( targetAddr *)variant.data();
         getIp=addrs->mcAddr;
+        updateStart = true;
         if((getIp== this->hostAddr)&&(m_target== MCTRANSMIT )) //判定是否是本socketc对应的中位机
         {
-            bootWriteAppdata(m_target,m_box,0);
-            m_update= appDataWrite ;
+            cmdAppJumpBoot(m_target,m_box);
+            m_update=   appJumpBoot;
             m_timer->start(3000);
         }
         else   if((addrs->powerAddrList.isEmpty()==false)&&(m_target==POWERMASTER))
@@ -167,8 +166,8 @@ void MySocket::slotDataSent(ushort cmd, uchar type,QVariant variant)
             lcAddrIndex = 0;
             this->m_powerList   =addrs->powerAddrList ;
             m_box =m_powerList.at(  lcAddrIndex );
-            bootWriteAppdata(m_target,m_box, 0);
-            m_update= appDataWrite ;
+            cmdAppJumpBoot(m_target,m_box);
+            m_update= appJumpBoot;
             m_timer->start(3000);
         }
         break;
@@ -234,12 +233,22 @@ void MySocket::  timeoutMethod(void)
     switch (m_update)
     {
     case  reConnect:      //client 联机 host
-        this->abort();
-        this->connectToHost(hostAddr,hostPort);
+        if(resendTimes<5)
+        {
+            this->abort();
+            this->connectToHost(hostAddr,hostPort);
+        }
+        else
+        {
+            msg.append("APP");
+            msg.append( "无法连接服务器！") ;
+            emit sigRunMsgToUi(hostAddr, UNCONNECT,msg,0);
+            this->m_timer->stop();
+        }
         break;
     case  targetConnect:          //与target建立 联机
         if(resendTimes<3)
-            cmdAppJumpBoot(m_target,m_box);
+           cmdConnectTarget(m_target,m_box);
         else
         {
             msg.append("APP");
@@ -247,7 +256,6 @@ void MySocket::  timeoutMethod(void)
             emit sigRunMsgToUi(hostAddr, CONNECTTARGET,msg,0);
             this->m_timer->stop();
         }
-
         break;
     case   eraseApp:      //擦除扇区
         if(resendTimes>3)
@@ -300,6 +308,9 @@ void MySocket::  timeoutMethod(void)
         //        else
         // if(writeMutex == false)
         bootWriteAppdata(m_target,m_box, txIndex);
+        break;
+    case bootJumpApp:  //跳转app
+        bootJumpToApp(m_target,m_box);
         break;
     default:
         break;
@@ -426,38 +437,61 @@ void MySocket::recvDataMethod(const uchar * data)
         return;
     //   resendTimes =0;
 
-    addr= *(data+10);
+    addr= *(data+10);  //lc地址
     cmd = *(data+7)|*(data+8)<<8;  //命令字
 
     result= *(data+11) ;
+    resendTimes = 0;
     switch (cmd) {
 
     case  CONNECTTARGET :      //BOOT联机
-
         if(result == 0) //是中位机boot回复
         {
             msg.append("BOOT");
             tr = QString("%1%2").arg(QString::number(addr)).arg( "中位机运行boot，需要跳转到app") ;
             msg.append(tr);
             emit sigRunMsgToUi(hostAddr,  CONNECTTARGET,msg,100);
+
+             if(updateStart == false )
             this->disconnectFromHost();
+             else
+             {
+                 m_update = eraseApp;
+                 bootEraseAppSectors(m_target,0);
+                  m_timer->start( RESENDTIME );
+             }
+
 
         }
-        else if(result == 1)    //是中位机boot APP回复
+        else if(result == 1)    //是中位机APP回复
         {
-            powerMsg.mcVersion = *(data+12)|(*(data+13)<<8);  //MC  version
-            powerMsg.lcNum = *(data+14); //lc num
-            memcpy(&powerMsg.m_lcMsg,data+15,powerMsg.lcNum*(sizeof (LcMsg)));
-            msg.append("BOOT");
+
+            PowerMsg m_powerMsg;
+            QVariant  variant;
+            memset(&m_powerMsg,0,sizeof (m_powerMsg));  //清0
+
+            m_powerMsg.mcVersion = *(data+12)|(*(data+13)<<8) ;  //MC  version
+            ushort lcNum = *(data+14); //lc num
+            memcpy(&m_powerMsg.m_lcMsg,data+15,lcNum*(sizeof (LcMsg)));
+            msg.append("BOOT");     //
             tr = QString("%1%2").arg(QString::number(addr)).arg( "app跳转boot完成，联机boot...") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,    CONNECTTARGET,msg,100);c
+            variant.setValue(m_powerMsg);
+            msg.append(QString::number( m_powerMsg.mcVersion));
+            for(uchar i =0;i<lcNum;i++)
+            {
+                msg.append(QString::number(m_powerMsg.m_lcMsg[i].boxId));
+                msg.append(QString::number(m_powerMsg.m_lcMsg[i].boxVersion));
+
+            }
+            emit sigRunMsgToUi(hostAddr,CONNECTTARGET,msg,lcNum);
 
         }
         else if (result == 2)   //中位机在boot内，无法与下位机通信 ，需要跳转
         {
+
             msg.append("BOOT");
-           tr = QString("%1%2").arg(QString::number(addr)).arg( "中位机运行boot，需要跳转到app") ;
+            tr = QString("%1%2").arg(QString::number(addr)).arg( "中位机运行boot，需要跳转到app") ;
             msg.append(tr);
             emit sigRunMsgToUi(hostAddr,  CONNECTTARGET,msg,100);
             this->disconnectFromHost();
@@ -467,6 +501,17 @@ void MySocket::recvDataMethod(const uchar * data)
         {
             ;
         }
+        break;
+    case  APPJUMPBOOT:   //app跳转到boot
+         if(m_target == MCTRANSMIT)
+         {
+              if(result == 0)  //跳转成功
+              disconnectFromHost();
+              else
+              {
+                  ;
+              }
+         }
         break;
     case ERASESECTOR:      //擦除
         if( result)  //擦除成功
@@ -493,8 +538,11 @@ void MySocket::recvDataMethod(const uchar * data)
             {
                 // m_timer->stop();
                 ip = hostAddr;
-                cmdAppJumpBoot(m_target,m_box);
-                m_update =   targetConnect;
+                bootWriteAppdata(m_target,  m_box,0);
+             //   cmdAppJumpBoot(m_target,m_box);
+                 m_update =     appDataWrite;
+                 m_timer->start( RESENDTIME );
+
             }
             msg.append("BOOT");
             tr =  QString("%1%2").arg( ip).arg("flash擦除成功") ;
@@ -510,9 +558,13 @@ void MySocket::recvDataMethod(const uchar * data)
             msg.append("BOOT");
             tr =  QString("%1%2").arg(  ip).arg("flash擦除失败") ;
             msg.append(tr);
-            emit sigRunMsgToUi(hostAddr,     ERASESECTOR,msg, addr);
+            emit sigRunMsgToUi(hostAddr,ERASESECTOR,msg, addr);
         }
         break;
+
+
+
+
     case BOOTWRITEDATA:      //app写数据
         m_checkBuf.checkedRxtimes++;
         txIndex= *(data+13)|*(data+14)<<8;
@@ -541,6 +593,7 @@ void MySocket::recvDataMethod(const uchar * data)
                 {
                     m_timer->stop();
                     ip = hostAddr;
+                    bootJumpToApp(m_target,0);  //MC从boot跳转到app
                     m_update =  bootJumpApp;
                 }
                 msg.append("BOOT");
@@ -652,7 +705,7 @@ void MySocket::bootEraseAppSectors(uchar target,  uchar addr)
 
     txLen =19;
     for(uchar i= 0;i<2;i++)
-        txBuf[i]=0xEF;
+        txBuf[i]=0xAA;
     txBuf[2]=txLen-4;
     txBuf[3]=(uchar)((txLen-4)>>8);
     txBuf[4]=(uchar)((txLen-4)>>16);
@@ -669,8 +722,8 @@ void MySocket::bootEraseAppSectors(uchar target,  uchar addr)
     chkSum = checksum(&txBuf[2], txLen-6);
     txBuf[15]=   chkSum;
     txBuf[16]=(uchar)( chkSum>>8);
-    txBuf[17]= 0xEE;
-    txBuf[18]=0xEE;
+    txBuf[17]= 0xBB;
+    txBuf[18]=0xBB;
 
 
 
@@ -696,7 +749,7 @@ void MySocket::bootJumpToApp(uchar target,  uchar addr)
     memset(txBuf,0,SEND_BUFF_LEN);
     txLen =15;
     for(uchar i= 0;i<2;i++)
-        txBuf[i]=0xFE;
+        txBuf[i]=0xAA;
     txBuf[2]=txLen-4;
     txBuf[3]=(uchar)((txLen-4)>>8);
     txBuf[4]=(uchar)((txLen-4)>>16);
@@ -709,8 +762,8 @@ void MySocket::bootJumpToApp(uchar target,  uchar addr)
     chkSum = checksum(&txBuf[2], txLen-6);
     txBuf[11]= chkSum;
     txBuf[12]=(uchar)( chkSum>>8);
-    txBuf[13]=0xEE;   //
-    txBuf[14]=0xEE;
+    txBuf[13]=0xBB;   //
+    txBuf[14]=0xBB;
 
 
 
@@ -785,7 +838,7 @@ void MySocket::bootWriteAppdata(uchar target,  uchar addr,ushort txframeIndex)
     txLen = 19+MAX_SEND_APPSIZE  ;
     memset(txBuf,0,SEND_BUFF_LEN);
     for(uchar i= 0;i<2;i++)
-        txBuf[i]=0xEF;
+        txBuf[i]=0xAA;
     txBuf[2]=txLen-4;
     txBuf[3]=(uchar)((txLen-4)>>8);
     txBuf[4]=(uchar)((txLen-4)>>16);
@@ -803,8 +856,8 @@ void MySocket::bootWriteAppdata(uchar target,  uchar addr,ushort txframeIndex)
     chkSum =checksum((const uchar *)&txBuf[2], (txLen-6));
     txBuf[16+MAX_SEND_APPSIZE-1]=  chkSum;
     txBuf[17+MAX_SEND_APPSIZE-1]=(uchar)(  chkSum>>8);
-    txBuf[18+MAX_SEND_APPSIZE-1]=0XEE;
-    txBuf[19+MAX_SEND_APPSIZE-1]=0XEE;
+    txBuf[18+MAX_SEND_APPSIZE-1]=0XBB;
+    txBuf[19+MAX_SEND_APPSIZE-1]=0XBB;
 
 
     Sleep(10);

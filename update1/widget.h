@@ -49,7 +49,7 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
-    void treeWidgetInit(const QString & ip,uchar addr);//初始化树形结点
+    void treeWidgetInit(const QString & ip,uchar addr,uchar lcNum,QStringList msg);//初始化树形结点
     QTreeWidgetItem *  AddTreeRoot(QString name,QString desc);
     void  disableTreeItems(QString text);   //掉线后移除treeitem
     QTreeWidgetItem *  AddTreeNode(QTreeWidgetItem *parent,QString name,QString desc);
@@ -150,7 +150,7 @@ private slots:
     void clientThreadInit(QString myIp,QString  mcId,  bool isNet, ushort myPort,ushort mcPort, updateTarget target);//创建中位机线程
 
 
-     void openCfgSlot(void);
+    void openCfgSlot(void);
     void on_openfile_clicked();   //打开文件
     void cfgBtnClickedSlot(void);   //连接中位机tcp
     void updateBtnClickedSlot(void);    //升级按键的槽
@@ -165,27 +165,34 @@ private slots:
 
     //running msg
     void slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, ushort value);
-    void  slotRefreshStatus(QString ip,QStringList versoinList,ushort powerAddr);//刷新各电源箱在线状态
+    void slotRefreshStatus(QString ip,uchar num ,QStringList msg);//刷新各电源箱在线状态
     void on_exportMsg_clicked();//导出运行信息
 
+
     //node状态改变
-    void slotItemChange(QString rootIp,QString device);
+    void  slotItemChange(QString rootIp,QString device);
     void  setParentPartialyChecked(QTreeWidgetItem  *item);  //设置父节点半选中状态
     void  clearChildItem(QTreeWidgetItem  *item);
+
     //中位机节点半选中节点插入处理
     void  midmachineNodePartiallyChecked(uchar itemIndex,QString device);
     void  midmachineNodeChecked(uchar itemIndex,QString device);
     void  midmachineNodeUnchecked(uchar itemIndex,QString device);
+
     //中位机节点管理
     void rootItemInsert(uchar rootIndex,QString device);
     void rootItemRemove(uchar rootIndex,QString device);
+
     //父节点管理
     void parentItemInsert(uchar parentIndex,uchar rootIndex,QString device);
     void parentItemRemove(uchar parentIndex,uchar rootIndex);
+
     //电源从节点管理
     void slaveItemManage(uchar parentIndex,uchar rootIndex,QString device);
     void slaveItemInsert(uchar childIndex,uchar parentIndex,uchar rootIndex,QString device);  //从节点插入
     void slaveItemRemove(uchar childIndex,uchar parentIndex,uchar rootIndex);  //从节点移除
+
+
 
 };
 

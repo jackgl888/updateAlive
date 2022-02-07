@@ -19,6 +19,8 @@
 
 
 
+//qstringlist msg  数据结构      0.正在运行的程序 APP BOOT    1.运行消息    2.中位机版本号     3.lcid  4.lc版本号
+
 enum  updateCmd{
 
                  CONNECTTARGET = 0X0401,      //与目标板建立联机
@@ -29,7 +31,7 @@ enum  updateCmd{
                  BACKUPAPP,             //备份之前的APP数据
                  GETAPPFILE,           //从主线程获得APP文件
                  NETLOST ,              //tcp掉线,,
-
+                 UNCONNECT,              //无法连接
                  MANUALSENDDATA,        //手动升级APP
                  MANUALERASE            //手动擦除
     };
@@ -175,7 +177,16 @@ typedef   struct
         ushort boxVersion;
 
 
-}LcMsg;  //整个电源柜的升级信息结构
+}LcMsg;  //单个电源柜版本号
+
+
+typedef  struct
+{
+    ushort mcVersion;
+    LcMsg m_lcMsg[10];     //lc版本信息
+}PowerMsg;   //整台设备版本信息
+
+
 #pragma pack()
 
 
@@ -188,6 +199,7 @@ Q_DECLARE_METATYPE(DebugParameterBitField)
 Q_DECLARE_METATYPE(targetAddr)
 Q_DECLARE_METATYPE(txNode)
 Q_DECLARE_METATYPE(LcMsg)
+Q_DECLARE_METATYPE(PowerMsg)
 //uint chnlNum:8;
 //uint stepType:8;
 //uint vloopSel:4;

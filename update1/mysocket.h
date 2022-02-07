@@ -59,7 +59,7 @@ private:
       uchar resendTimes ;    //重发次数
 
       QTimer * m_timer;   //
-
+    bool   updateStart;
     uchar recvbuf[RECV_BUFF_LEN ];  //接收数据
     uchar  txBuf[SEND_BUFF_LEN  ];
 
@@ -100,12 +100,6 @@ private:
    }m_checkBuf;
 
 
-   struct
-   {
-       ushort mcVersion;
-       uchar lcNum;  //电源下位机数量
-       LcMsg m_lcMsg[10];
-   }powerMsg;
 
 };
 

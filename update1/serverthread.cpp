@@ -5,7 +5,7 @@
 
 
 
-serverThread::serverThread(QString ip, QString mcId, uint sockDesc,uint mcSockDesc, bool isNet, updateTarget target, QObject *parent) :
+serverThread::serverThread(QString ip, QString mcId,bool isNet, uint sockDesc,uint mcSockDesc,  updateTarget target, QObject *parent) :
     QThread(parent),
     m_sockDesc(sockDesc),
     m_mcSockDesc(mcSockDesc)
@@ -43,11 +43,14 @@ void serverThread::run(void)
           m_socket->moveToThread(this);
 
           //回传  running msg
+
           connect(this->m_socket,SIGNAL(sigRunMsgToUi(QString,ushort,QStringList,ushort)),this,
                   SLOT(slotSendRunningMsg(QString,ushort,QStringList,ushort)));
 
           //发送指令到线程
           connect(this,SIGNAL(sendUpdateCmd(ushort,uchar,QVariant)), this->m_socket,SLOT(slotDataSent(ushort ,uchar ,QVariant )));   //  主线程
+
+          //
       }
       else
       {
@@ -101,6 +104,8 @@ void serverThread::slotSendUpdateCmd(ushort cmd, uchar type,QVariant para)
 
 void serverThread::slotSendRunningMsg(QString ip, ushort cmd, QStringList msg, ushort value)
 {
+
+
       emit sigSendRunningMsg(ip,cmd,msg,value);
 }
 

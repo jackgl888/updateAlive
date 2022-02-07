@@ -16,7 +16,7 @@ class serverThread : public QThread
 {
     Q_OBJECT
 public:
-    serverThread(QString ip,  QString mcId, uint sockDesc,uint mcSockDesc, bool isNet, updateTarget target,   QObject *parent = Q_NULLPTR);
+    serverThread(QString ip,  QString mcId, bool isNet, uint sockDesc,uint mcSockDesc, updateTarget target,   QObject *parent = Q_NULLPTR);
     ~serverThread();
 
 
@@ -26,16 +26,17 @@ signals:
     void  disconnectTCP(const QString &ip);
 
     void  sendUpdateCmd(ushort cmd,uchar type,QVariant para);   //转发升级数据
-   void  sigSendRunningMsg(QString ip, ushort  cmd,QStringList  msg, ushort value);
+   void   sigSendRunningMsg(QString ip, ushort  cmd,QStringList  msg, ushort value);
 
 private slots:   
 
 
-    void disconnectToHost(void);
+    void  disconnectToHost(void);
 
-    void slotSendUpdateCmd(ushort cmd ,uchar type,QVariant); //转发升级命令
+    void  slotSendUpdateCmd(ushort cmd ,uchar type,QVariant); //转发升级命令
 
     void  slotSendRunningMsg(QString ip, ushort  cmd,QStringList  msg, ushort value);
+
 private:
 
     void run(void);

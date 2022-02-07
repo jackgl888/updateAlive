@@ -77,8 +77,10 @@ void Widget::slotItemChange(QString rootIp,QString device)
 
 
 
+
+
 //running  msg
-void Widget::slotRunningMsgProcess(QString ip, ushort cmd, QStringList msg, ushort value)
+void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, ushort value)
 {
     uchar row;
     QList<QStandardItem *>m_list;
@@ -94,20 +96,21 @@ void Widget::slotRunningMsgProcess(QString ip, ushort cmd, QStringList msg, usho
         this->msgModle->setData(this->msgModle->index(row,2),msg.at(0)); //指示程序运行层
         this->msgModle->setData(this->msgModle->index(row,4),msg.at(1));//信息
         break;
+     case  UNCONNECT://无法连接
+           msgBox->append(msg.at(1));
 
+        break;
 
     case    CONNECTTARGET:    //boot联机
+\
 
-        if((value<8)||(this->deviceBox->currentText() == "中位机"))
-        {
-            if(trayTree->topLevelItemCount()==0)  //没有节点
-                treeWidgetInit( ip,value);  //创建
-            else  // 有节
-                slotRefreshStatus( ip,msg,value);
-        }
+        if(trayTree->topLevelItemCount()==0)  //没有节点
+         treeWidgetInit( ip,0, value,  msg);  //创建
+        else  // 有节
+         slotRefreshStatus(ip,value,msg); //
+
         msgBox->append(msg.at(1));
         return;
-
         break;
 
     case BOOTWRITEDATA:    //写数据
@@ -367,6 +370,7 @@ QTreeWidgetItem * Widget::AddTreeRoot(QString name,QString desc)
     QTreeWidgetItem * item=new QTreeWidgetItem(this->trayTree);
     this->trayTree->addTopLevelItem(item);
     item->setText(0, name );
+    item->setText(1,desc);
     item->setFlags(Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt:: ItemIsSelectable);
     item->setCheckState(0, Qt::Unchecked);
     return item;
@@ -402,11 +406,12 @@ QTreeWidgetItem *  Widget::AddTreeNode(QTreeWidgetItem *parent,QString name,QStr
     QTreeWidgetItem * item=new QTreeWidgetItem(parent);
     parent->addChild(item);
     item->setText(0,name);
+    item->setText(1,desc);
+
     item->setFlags(Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt:: ItemIsSelectable);
     item->setCheckState(0, Qt::Unchecked);
     return item;
-    
-    
+
 }
 
 
@@ -415,6 +420,7 @@ QTreeWidgetItem *  Widget::AddTreeNode(QTreeWidgetItem *parent,QString name,QStr
 //节点状态处理
 void Widget::treeItemChanged(QTreeWidgetItem* item, int column)
 {
+
     this->updateChild(item);
     this->updateParent(item);
 
@@ -561,7 +567,11 @@ void Widget::mcipCfgBtnClickedSlot()
         QTextStream   out(&file);
         text = QString("%1%2%3").arg(m_ipEdit->text()).arg(",").arg(QString::number( targetPort->value()));
         if(mcIplist.contains( text)!=true)
-        out<<text<<endl;
+        {
+              out<<text<<endl;
+              msgBox->append("配置成功！");
+        }
+
         else
        QMessageBox::information(NULL, "Title", "IP已经存在！");
 
@@ -808,7 +818,7 @@ void Widget::bottomLayOutCtrlInit()
        //设备选择框初始化
        QStringList strList;
 
-       strList<<"电源柜"<<"中位机"<<"温度控制板"<<"转发板"<<"工装主控板"
+       strList<<"中位机"<<"电源柜"<<"温度控制板"<<"转发板"<<"工装主控板"
              <<"温度modbus协议"<<"电源从板"<<"电源下位机";
        this->deviceBox  = new QComboBox(this);
        this->deviceBox->addItems(strList);
@@ -851,10 +861,6 @@ void Widget::bottomLayOutCtrlInit()
        "QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
 
        updateBtn->setEnabled(false);
-
-
-
-
 
       //目标IP,PORT输入框
        QLabel *ipLab = new QLabel("IP：",this);
@@ -977,26 +983,25 @@ void Widget::clearChildItem(QTreeWidgetItem *item)
 
 
 //刷新版本号
-void Widget::slotRefreshStatus(QString ip,QStringList versoinList,ushort powerAddr)
+void Widget::slotRefreshStatus(QString ip,uchar num ,QStringList msg)
 {
 
     for(uchar i =0;i<trayTree->topLevelItemCount();i++)
     {
         if(trayTree->topLevelItem(i)->text(0)==ip)
         {
-            if( trayTree->topLevelItem(i)->isDisabled()==true)
-                trayTree->topLevelItem(i)->setDisabled(false);
+//            if( trayTree->topLevelItem(i)->isDisabled()==true)
+//                trayTree->topLevelItem(i)->setDisabled(false);
+            trayTree->topLevelItem(i)->setText(1,msg.at(2));
             if(deviceBox->currentText()=="电源柜")
             {
-                if(  trayTree->topLevelItem(i)->child(0)->child( powerAddr)->isDisabled()==true)
-                    trayTree->topLevelItem(i)->child(0)->child( powerAddr)->setDisabled(false);
+                for (uchar j=0;j<num;j++)
+                trayTree->topLevelItem(i)->child(0)->child(msg.at(3+2*j).toShort())->setText(1, msg.at(4+2*i));
             }
-
             return;
         }
-
     }
-    treeWidgetInit( ip,powerAddr); //不存在则初始化
+    treeWidgetInit( ip,0,num,msg); //不存在则初始化
 }
 
 
@@ -1062,6 +1067,8 @@ void Widget::cfgBtnClickedSlot()
         }
         else
         {
+            ip= ipbox->currentText();
+            port=portbox->value();
             if(deviceBox->currentText()=="中位机")
             {
                 if(mcIplist.isEmpty()!=true)
@@ -1069,7 +1076,9 @@ void Widget::cfgBtnClickedSlot()
                     for(uchar i = 0;i<mcIplist.count();i++)
                     {
                           QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
-                          clientThreadInit(ip, mcIplist.value(0), true, port, mcIplist.value(1).toUShort(), MCTRANSMIT) ;
+                         QString    mcIp= pieces.value(0);
+                          ushort   mcPort = pieces.value(1).toUShort();
+                          clientThreadInit(ip, pieces.value(0), true, port, pieces.value(1).toUShort(), MCTRANSMIT) ;
                     }
                 }
                 else
@@ -1084,7 +1093,9 @@ void Widget::cfgBtnClickedSlot()
                       for(uchar i = 0;i<mcIplist.count();i++)
                       {
                             QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
-                            clientThreadInit(ip, mcIplist.value(0), true, port,mcIplist.value(1).toUShort(), POWERMASTER) ;
+                            ushort mcPort = pieces.value(1).toUShort();
+                            QString mcIp = pieces.value(0);
+                            clientThreadInit(ip, mcIp, true, port,pieces.value(1).toUShort(), POWERMASTER) ;
                       }
                   }
                   else
@@ -1110,9 +1121,10 @@ void Widget::clientThreadInit(QString myIp, QString  mcId, bool isNet, ushort my
     
     serverThread  *thread = new serverThread(myIp,mcId, isNet,myPort, mcPort ,target,this);
     connect(this,SIGNAL(sigdatasent(ushort,uchar,QVariant)),thread,SLOT(slotSendUpdateCmd(ushort,uchar,QVariant))); //ui命令到线程
-
+                                                                                                                   //线程到ui
     //接收running msg
-    connect(thread,SIGNAL(sigSendRunningMsg(QString,ushort,QStringList,ushort)),this, SLOT(slotRunningMsgProcess(QString,ushort,QStringList,ushort)));
+    connect(thread,SIGNAL(sigSendRunningMsg(QString,ushort,QStringList,ushort)),this,
+            SLOT(slotRunningMsgProcess(QString,ushort,QStringList,ushort)));
 
 
     thread->start();
@@ -1151,7 +1163,7 @@ void Widget::updateBtnClickedSlot(void)
                     {
                         m_targetAddr.mcAddr=trayTree->topLevelItem(i)->text(0);
                         variant.setValue( m_targetAddr);
-                        emit sigdatasent( BOOTWRITEDATA,  MCTRANSMIT,variant);
+                        emit sigdatasent(APPJUMPBOOT, MCTRANSMIT,variant);
                     }
                 }
                 else if(this->deviceBox->currentText() =="电源柜")
@@ -1164,11 +1176,12 @@ void Widget::updateBtnClickedSlot(void)
                             m_targetAddr.powerAddrList.append( trayTree->topLevelItem(i)->child(0)->child(j)->text(0).toUShort());  //把升级的电源柜地址收集入列
                     }
                     variant.setValue(m_targetAddr);
-                    emit sigdatasent( BOOTWRITEDATA,  POWERMASTER,variant);
+                    emit sigdatasent(  APPJUMPBOOT,  POWERMASTER,variant);
                 }
             }
         }
     }
+
 
 }
 
@@ -1256,8 +1269,8 @@ void Widget::treeWidgetUiInit()
 
     leftLayout->addWidget(this->trayTree);
 
-    connect(this->trayTree,SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-            this, SLOT(treeItemChanged(QTreeWidgetItem*, int)));
+    connect(this->trayTree,SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(treeItemChanged(QTreeWidgetItem*, int)));
+
 
 
     //主线程将item状态改变更新msgmodle
@@ -1449,37 +1462,33 @@ void Widget::dropEvent(QDropEvent *event)
 
 
 //初始化树形窗口与托盘管理类
-void Widget::treeWidgetInit(const QString & ip,uchar addr)
+void Widget::treeWidgetInit(const QString & ip,uchar addr,uchar lcNum,QStringList msg)
 {
 
     QTreeWidgetItem *itemRoot=NULL;
     QTreeWidgetItem *itemParent=NULL;
     QTreeWidgetItem *itemChild=NULL;
 
-    itemRoot=AddTreeRoot(ip,0);//创建父节点
+    itemRoot=AddTreeRoot(ip,msg.at(2));//创建父节点
 
     itemRoot->setExpanded(true);
     itemRoot->setBackgroundColor(1,QColor(160,207,207));
     
-    itemParent= AddTreeNode(itemRoot,"电源柜",0);
-    itemParent->setExpanded(true);
+
 
    if(deviceBox->currentText()=="电源柜")
    {
-       for(ushort i=0;i<POWERNUM ;i++)//创建子节点
+       itemParent= AddTreeNode(itemRoot,"电源柜",0);
+       itemParent->setExpanded(true);
+       for(ushort i=0;i< lcNum ;i++)//创建子节点
        {
-           itemChild= AddTreeNode(itemParent,QString::number(i),0);
+           itemChild= AddTreeNode(itemParent,msg.at(3+2*i),msg.at(4+2*i));
            itemChild->setExpanded(true);
            itemChild->setBackgroundColor(1,QColor(160,207,207));
-           if(i==addr)  //串口升级状态
-               itemChild->setDisabled(false);
-           else
-               itemChild->setDisabled(true);
        }
-
    }
 
-    itemRoot->setDisabled(false);
+
 }
 
 

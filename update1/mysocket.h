@@ -66,7 +66,6 @@ private:
     enum
     {
         reConnect = 0x01,  //掉线重联
-
         targetConnect,  //与目标板建立联机,,,,
         appJumpBoot,   //app跳转到boot
         eraseApp, //扇区擦除

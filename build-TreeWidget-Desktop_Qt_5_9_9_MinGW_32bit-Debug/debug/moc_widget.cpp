@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Widget_t {
-    QByteArrayData data[55];
-    char stringdata0[742];
+    QByteArrayData data[54];
+    char stringdata0[724];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -65,27 +65,26 @@ QT_MOC_LITERAL(30, 355, 21), // "slotRunningMsgProcess"
 QT_MOC_LITERAL(31, 377, 3), // "msg"
 QT_MOC_LITERAL(32, 381, 5), // "value"
 QT_MOC_LITERAL(33, 387, 17), // "slotRefreshStatus"
-QT_MOC_LITERAL(34, 405, 11), // "versoinList"
-QT_MOC_LITERAL(35, 417, 9), // "powerAddr"
-QT_MOC_LITERAL(36, 427, 20), // "on_exportMsg_clicked"
-QT_MOC_LITERAL(37, 448, 14), // "slotItemChange"
-QT_MOC_LITERAL(38, 463, 6), // "rootIp"
-QT_MOC_LITERAL(39, 470, 24), // "setParentPartialyChecked"
-QT_MOC_LITERAL(40, 495, 14), // "clearChildItem"
-QT_MOC_LITERAL(41, 510, 30), // "midmachineNodePartiallyChecked"
-QT_MOC_LITERAL(42, 541, 9), // "itemIndex"
-QT_MOC_LITERAL(43, 551, 21), // "midmachineNodeChecked"
-QT_MOC_LITERAL(44, 573, 23), // "midmachineNodeUnchecked"
-QT_MOC_LITERAL(45, 597, 14), // "rootItemInsert"
-QT_MOC_LITERAL(46, 612, 9), // "rootIndex"
-QT_MOC_LITERAL(47, 622, 14), // "rootItemRemove"
-QT_MOC_LITERAL(48, 637, 16), // "parentItemInsert"
-QT_MOC_LITERAL(49, 654, 11), // "parentIndex"
-QT_MOC_LITERAL(50, 666, 16), // "parentItemRemove"
-QT_MOC_LITERAL(51, 683, 15), // "slaveItemManage"
-QT_MOC_LITERAL(52, 699, 15), // "slaveItemInsert"
-QT_MOC_LITERAL(53, 715, 10), // "childIndex"
-QT_MOC_LITERAL(54, 726, 15) // "slaveItemRemove"
+QT_MOC_LITERAL(34, 405, 3), // "num"
+QT_MOC_LITERAL(35, 409, 20), // "on_exportMsg_clicked"
+QT_MOC_LITERAL(36, 430, 14), // "slotItemChange"
+QT_MOC_LITERAL(37, 445, 6), // "rootIp"
+QT_MOC_LITERAL(38, 452, 24), // "setParentPartialyChecked"
+QT_MOC_LITERAL(39, 477, 14), // "clearChildItem"
+QT_MOC_LITERAL(40, 492, 30), // "midmachineNodePartiallyChecked"
+QT_MOC_LITERAL(41, 523, 9), // "itemIndex"
+QT_MOC_LITERAL(42, 533, 21), // "midmachineNodeChecked"
+QT_MOC_LITERAL(43, 555, 23), // "midmachineNodeUnchecked"
+QT_MOC_LITERAL(44, 579, 14), // "rootItemInsert"
+QT_MOC_LITERAL(45, 594, 9), // "rootIndex"
+QT_MOC_LITERAL(46, 604, 14), // "rootItemRemove"
+QT_MOC_LITERAL(47, 619, 16), // "parentItemInsert"
+QT_MOC_LITERAL(48, 636, 11), // "parentIndex"
+QT_MOC_LITERAL(49, 648, 16), // "parentItemRemove"
+QT_MOC_LITERAL(50, 665, 15), // "slaveItemManage"
+QT_MOC_LITERAL(51, 681, 15), // "slaveItemInsert"
+QT_MOC_LITERAL(52, 697, 10), // "childIndex"
+QT_MOC_LITERAL(53, 708, 15) // "slaveItemRemove"
 
     },
     "Widget\0sigdatasent\0\0cmd\0type\0"
@@ -99,9 +98,8 @@ QT_MOC_LITERAL(54, 726, 15) // "slaveItemRemove"
     "clearBtnClickedSlot\0appSendBtnClickedSlot\0"
     "eraseBtnClickedSlot\0mcipCfgBtnClickedSlot\0"
     "slotRunningMsgProcess\0msg\0value\0"
-    "slotRefreshStatus\0versoinList\0powerAddr\0"
-    "on_exportMsg_clicked\0slotItemChange\0"
-    "rootIp\0setParentPartialyChecked\0"
+    "slotRefreshStatus\0num\0on_exportMsg_clicked\0"
+    "slotItemChange\0rootIp\0setParentPartialyChecked\0"
     "clearChildItem\0midmachineNodePartiallyChecked\0"
     "itemIndex\0midmachineNodeChecked\0"
     "midmachineNodeUnchecked\0rootItemInsert\0"
@@ -144,20 +142,20 @@ static const uint qt_meta_data_Widget[] = {
       29,    0,  203,    2, 0x08 /* Private */,
       30,    4,  204,    2, 0x08 /* Private */,
       33,    3,  213,    2, 0x08 /* Private */,
-      36,    0,  220,    2, 0x08 /* Private */,
-      37,    2,  221,    2, 0x08 /* Private */,
-      39,    1,  226,    2, 0x08 /* Private */,
-      40,    1,  229,    2, 0x08 /* Private */,
-      41,    2,  232,    2, 0x08 /* Private */,
-      43,    2,  237,    2, 0x08 /* Private */,
-      44,    2,  242,    2, 0x08 /* Private */,
-      45,    2,  247,    2, 0x08 /* Private */,
-      47,    2,  252,    2, 0x08 /* Private */,
-      48,    3,  257,    2, 0x08 /* Private */,
-      50,    2,  264,    2, 0x08 /* Private */,
-      51,    3,  269,    2, 0x08 /* Private */,
-      52,    4,  276,    2, 0x08 /* Private */,
-      54,    3,  285,    2, 0x08 /* Private */,
+      35,    0,  220,    2, 0x08 /* Private */,
+      36,    2,  221,    2, 0x08 /* Private */,
+      38,    1,  226,    2, 0x08 /* Private */,
+      39,    1,  229,    2, 0x08 /* Private */,
+      40,    2,  232,    2, 0x08 /* Private */,
+      42,    2,  237,    2, 0x08 /* Private */,
+      43,    2,  242,    2, 0x08 /* Private */,
+      44,    2,  247,    2, 0x08 /* Private */,
+      46,    2,  252,    2, 0x08 /* Private */,
+      47,    3,  257,    2, 0x08 /* Private */,
+      49,    2,  264,    2, 0x08 /* Private */,
+      50,    3,  269,    2, 0x08 /* Private */,
+      51,    4,  276,    2, 0x08 /* Private */,
+      53,    3,  285,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::UShort, QMetaType::UChar, QMetaType::QVariant,    3,    4,    2,
@@ -177,21 +175,21 @@ static const uint qt_meta_data_Widget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString, QMetaType::UShort, QMetaType::QStringList, QMetaType::UShort,    6,    3,   31,   32,
-    QMetaType::Void, QMetaType::QString, QMetaType::QStringList, QMetaType::UShort,    6,   34,   35,
+    QMetaType::Void, QMetaType::QString, QMetaType::UChar, QMetaType::QStringList,    6,   34,   31,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString,   38,    7,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString,   37,    7,
     QMetaType::Void, 0x80000000 | 9,   10,
     QMetaType::Void, 0x80000000 | 9,   10,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   42,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   42,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   42,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   46,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   46,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   49,   46,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   49,   46,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   49,   46,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   53,   49,   46,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar,   53,   49,   46,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   41,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   41,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   41,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   45,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   45,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   48,   45,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   48,   45,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   48,   45,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   52,   48,   45,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar,   52,   48,   45,
 
        0        // eod
 };
@@ -217,7 +215,7 @@ void Widget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 12: _t->eraseBtnClickedSlot(); break;
         case 13: _t->mcipCfgBtnClickedSlot(); break;
         case 14: _t->slotRunningMsgProcess((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< ushort(*)>(_a[2])),(*reinterpret_cast< QStringList(*)>(_a[3])),(*reinterpret_cast< ushort(*)>(_a[4]))); break;
-        case 15: _t->slotRefreshStatus((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QStringList(*)>(_a[2])),(*reinterpret_cast< ushort(*)>(_a[3]))); break;
+        case 15: _t->slotRefreshStatus((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QStringList(*)>(_a[3]))); break;
         case 16: _t->on_exportMsg_clicked(); break;
         case 17: _t->slotItemChange((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         case 18: _t->setParentPartialyChecked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;

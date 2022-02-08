@@ -28,7 +28,7 @@ Widget::Widget(QWidget *parent) :  QWidget(parent)
     //支持插放
     this->setAcceptDrops(true);
 
-    openfile(  mcipListPath ); //读取ip到list
+    openfile(  mcipListPath ); //读取ip到list vVLSI
 
     QGridLayout  * mainLayout  = new QGridLayout(this);
 
@@ -88,7 +88,7 @@ void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, us
     switch (cmd) {
 
     case NETLOST :  //掉线
-        disableTreeItems(ip); //  //失能父子节点
+    //    disableTreeItems(ip); //  //失能父子节点
         m_list =  this->msgModle->findItems(ip);   //at 0 为消息  at 1 为
         if( m_list.isEmpty())
             return;
@@ -1152,7 +1152,10 @@ void Widget::updateBtnClickedSlot(void)
         updateBtnMutex =false;
 
         m_targetAddr.mcAddr=nullptr;
-
+        m_targetAddr.mcAddr="192.168.0.100";
+        variant.setValue( m_targetAddr);
+        emit sigdatasent(APPJUMPBOOT, MCTRANSMIT,variant);
+#if 0
         for(uchar i = 0;i<trayTree->topLevelItemCount();i++)
         {
             if(  trayTree->topLevelItem(i)->checkState(0)!= Qt::Unchecked)//有节点被选择
@@ -1180,6 +1183,7 @@ void Widget::updateBtnClickedSlot(void)
                 }
             }
         }
+#endif
     }
 
 

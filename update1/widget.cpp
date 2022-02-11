@@ -102,7 +102,7 @@ void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, us
         break;
 
     case    CONNECTTARGET:    //boot联机
-\
+
 
         if(trayTree->topLevelItemCount()==0)  //没有节点
          treeWidgetInit( ip,0, value,  msg);  //创建
@@ -133,8 +133,6 @@ void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, us
     default:
         break;
     }
-
-
 }
 
 
@@ -818,7 +816,7 @@ void Widget::bottomLayOutCtrlInit()
        //设备选择框初始化
        QStringList strList;
 
-       strList<<"中位机"<<"电源柜"<<"温度控制板"<<"转发板"<<"工装主控板"
+       strList<<"电源柜"<<"中位机"<<"温度控制板"<<"转发板"<<"工装主控板"
              <<"温度modbus协议"<<"电源从板"<<"电源下位机";
        this->deviceBox  = new QComboBox(this);
        this->deviceBox->addItems(strList);

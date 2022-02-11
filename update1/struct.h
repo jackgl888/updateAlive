@@ -12,7 +12,7 @@
 #define  WORDNUM                256
 #define  MAX_SEND_APPSIZE       (WORDNUM*4)
 #define  CONNTIME                3000      //联机频率
-#define  RESENDTIME             1000   //重发时间间隔
+#define  RESENDTIME             3000   //重发时间间隔
 #define  SEND_BUFF_LEN          2000
 #define  RECV_BUFF_LEN          2000
 #define  mcipListPath           "./ipcfig.txt"

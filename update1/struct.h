@@ -8,7 +8,7 @@
 
 
 #define  POWERNUM               3
-
+#define  TXDELAY                10
 
 
 #define  MAX_RESEND_TIMES        50

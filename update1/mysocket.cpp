@@ -86,7 +86,7 @@ MySocket::MySocket( QString mcIp,  uint mcPort, updateTarget target,QObject *par
     updateStart = false;
 
     this->m_timer = new QTimer(this);
-    connect(this, SIGNAL(readyRead()), this, SLOT(recvData()),Qt::QueuedConnection);
+    connect(this, SIGNAL(readyRead()), this, SLOT(recvData()));
     connect(m_timer,SIGNAL(timeout()),this,SLOT(timeoutMethod()));
     connect(this,SIGNAL(connected()),this,SLOT(slotConnected()));
     connect(this,SIGNAL(disconnected()),this,SLOT(slotDisconnected()));   //"联机中位机"
@@ -110,7 +110,7 @@ void MySocket::slotConnected()
 
     QStringList  msg;
     QString tr;
-
+   qDebug()<<"tcpConn thread:"<<QThread::currentThreadId();
     resendTimes = 0;
     m_update=   targetConnect;
 
@@ -251,7 +251,7 @@ void MySocket::  timeoutMethod(void)
         }
         else
         {
-               QDateTime curDateTime=QDateTime::currentDateTime();
+            QDateTime curDateTime=QDateTime::currentDateTime();
             resendTimes = 0;
             msg.append("APP");
             msg.append( curDateTime.toString("yyyy-MM-dd hh:mm:ss")+"无法连接服务器！") ;
@@ -260,7 +260,7 @@ void MySocket::  timeoutMethod(void)
         }
         break;
     case  targetConnect:          //与target建立 联机
-           qDebug()<<"time thread:"<<QThread::currentThreadId();
+          qDebug()<<"touch thread:"<<QThread::currentThreadId();
         if(resendTimes<MAX_RESEND_TIMES   )
             cmdConnectTarget(m_target,m_box);
         else
@@ -498,30 +498,27 @@ void MySocket::recvDataMethod(const uchar * data)
     case  CONNECTTARGET :      //BOOT联机
         if(result == 0) //是boot回复 ls
         {
-            if(updateStart == false )
-            {
-                bootJumpToApp(m_target,0);
-                m_update =   bootJumpApp;
-                m_timer->start(3000);
-                msg.append("BOOT");
-                tr = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg( "目标板正在运行boot，需要跳转到app") ;
-                msg.append(tr);
-                emit sigRunMsgToUi(hostAddr,  UNCONNECT,msg,100);
-            }
-            else
-            {
+//            if(updateStart == false )
+//            {
+//                bootJumpToApp(m_target,0);
+//                m_update =   bootJumpApp;
+//                m_timer->start(3000);
+//                msg.append("BOOT");
+//                tr = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg( "目标板正在运行boot，需要跳转到app") ;
+//                msg.append(tr);
+//                emit sigRunMsgToUi(hostAddr,  UNCONNECT,msg,100);
+//            }
+//            else
+//            {
 //                tr = QString("%1%2%3").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg(hostAddr).arg( "已经跳转到boot，开始擦除...") ;
 //                msg.append(tr);
 //                emit sigRunMsgToUi(hostAddr,  UNCONNECT,msg,100);
-                 qDebug()<<"estx thread:"<<QThread::currentThreadId();
+                qDebug()<<"estx thread:"<<QThread::currentThreadId();
                 m_update = eraseApp;
                 bootEraseAppSectors(m_target,0);
                 m_timer->start(ERASERESEND);
-
-
-                return;
-            }
-
+               // return;
+           // }
         }
         else if(result == 1)    //是中位机APP回复
         {
@@ -690,7 +687,6 @@ void MySocket::recvDataMethod(const uchar * data)
             }
             else    //中位机
             {
-
                 ip = hostAddr;
                 m_update = targetConnect;
             }
@@ -743,7 +739,7 @@ void MySocket::cmdAppJumpBoot(uchar target,  uchar addr)
     txBuf[12]=(uchar)( chkSum>>8);
     txBuf[13]=0xBB;
     txBuf[14]=0xBB;   //加密
-    Sleep(10);
+    Sleep( TXDELAY  );
     this->write(reinterpret_cast<char *>(txBuf),txLen);
 
 }
@@ -780,7 +776,7 @@ void MySocket::bootEraseAppSectors(uchar target,  uchar addr)
     txBuf[16]=(uchar)( chkSum>>8);
     txBuf[17]= 0xBB;
     txBuf[18]=0xBB;
-    Sleep(10);
+    Sleep(TXDELAY );
     this->write(reinterpret_cast<char *>(txBuf),txLen);
 
 }
@@ -818,7 +814,7 @@ void MySocket::bootJumpToApp(uchar target,  uchar addr)
     txBuf[12]=(uchar)( chkSum>>8);
     txBuf[13]=0xBB;   //
     txBuf[14]=0xBB;
-    Sleep(10);
+    Sleep( TXDELAY  );
     this->write(reinterpret_cast<char *>(txBuf),txLen);
 }
 
@@ -911,7 +907,7 @@ void MySocket::bootWriteAppdata(uchar target,  uchar addr,ushort txframeIndex)
     txBuf[18+MAX_SEND_APPSIZE-1]=0XBB;
     txBuf[19+MAX_SEND_APPSIZE-1]=0XBB;
 
-    Sleep(10);
+    Sleep( TXDELAY  );
     m_checkBuf.txTimes++;
     this->write(reinterpret_cast<char *>(txBuf),txLen);
 

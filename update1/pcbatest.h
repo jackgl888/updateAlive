@@ -56,9 +56,9 @@ signals:
     void  sigdatasent(uchar,uchar);
     void  sig(QVariant);
 
-public slots:
+public   slots:
          void timeoutMethodSlot(void);
-private  slots:
+private   slots:
     void   cfgSaveSlot(void);  //完成配置
     void   dataRecved(void);  //数据接收
     //发送种线的数据
@@ -70,15 +70,12 @@ private  slots:
     //打开配置
     void  openCfgSlot(void);
     void  openfile( QString filename );
-
     //开始采样
     void  startSampleSlot(void);
-
     //心跳下发pcbAPP联机
     void  appConnectSend(void);
     //将pcb的配置数据同步到线程
     void cfgDataToThreadSlot(void);
-
     //另保存配置文件
     void  saveBtnClickedSlot();
 private:

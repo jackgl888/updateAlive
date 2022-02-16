@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     QFont font("AR PL KaitiM GB",9);
     a.setFont(font);
 
- //  qDebug()<<"main thread:"<<QThread::currentThreadId();
+  qDebug()<<"main thread:"<<QThread::currentThreadId();
     Mlogin loginDlg;
     projectWidget  w;
 //  Widget w ;

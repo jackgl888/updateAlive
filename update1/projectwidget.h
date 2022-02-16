@@ -14,6 +14,7 @@ public:
 signals:
 
 public slots:
+
 private:
 
     QSplitter  *splitterMain;

@@ -76,7 +76,6 @@ private:
 
     }m_update;
 
-
     QList<uchar>m_powerList; //要升级的电源的地址队列
 
     uchar  m_allData[APP_SIZE ];

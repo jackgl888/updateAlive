@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Widget_t {
-    QByteArrayData data[54];
-    char stringdata0[724];
+    QByteArrayData data[53];
+    char stringdata0[704];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -59,32 +59,31 @@ QT_MOC_LITERAL(24, 232, 17), // "cfgBtnClickedSlot"
 QT_MOC_LITERAL(25, 250, 20), // "updateBtnClickedSlot"
 QT_MOC_LITERAL(26, 271, 19), // "clearBtnClickedSlot"
 QT_MOC_LITERAL(27, 291, 21), // "appSendBtnClickedSlot"
-QT_MOC_LITERAL(28, 313, 19), // "eraseBtnClickedSlot"
-QT_MOC_LITERAL(29, 333, 21), // "mcipCfgBtnClickedSlot"
-QT_MOC_LITERAL(30, 355, 21), // "slotRunningMsgProcess"
-QT_MOC_LITERAL(31, 377, 3), // "msg"
-QT_MOC_LITERAL(32, 381, 5), // "value"
-QT_MOC_LITERAL(33, 387, 17), // "slotRefreshStatus"
-QT_MOC_LITERAL(34, 405, 3), // "num"
-QT_MOC_LITERAL(35, 409, 20), // "on_exportMsg_clicked"
-QT_MOC_LITERAL(36, 430, 14), // "slotItemChange"
-QT_MOC_LITERAL(37, 445, 6), // "rootIp"
-QT_MOC_LITERAL(38, 452, 24), // "setParentPartialyChecked"
-QT_MOC_LITERAL(39, 477, 14), // "clearChildItem"
-QT_MOC_LITERAL(40, 492, 30), // "midmachineNodePartiallyChecked"
-QT_MOC_LITERAL(41, 523, 9), // "itemIndex"
-QT_MOC_LITERAL(42, 533, 21), // "midmachineNodeChecked"
-QT_MOC_LITERAL(43, 555, 23), // "midmachineNodeUnchecked"
-QT_MOC_LITERAL(44, 579, 14), // "rootItemInsert"
-QT_MOC_LITERAL(45, 594, 9), // "rootIndex"
-QT_MOC_LITERAL(46, 604, 14), // "rootItemRemove"
-QT_MOC_LITERAL(47, 619, 16), // "parentItemInsert"
-QT_MOC_LITERAL(48, 636, 11), // "parentIndex"
-QT_MOC_LITERAL(49, 648, 16), // "parentItemRemove"
-QT_MOC_LITERAL(50, 665, 15), // "slaveItemManage"
-QT_MOC_LITERAL(51, 681, 15), // "slaveItemInsert"
-QT_MOC_LITERAL(52, 697, 10), // "childIndex"
-QT_MOC_LITERAL(53, 708, 15) // "slaveItemRemove"
+QT_MOC_LITERAL(28, 313, 21), // "mcipCfgBtnClickedSlot"
+QT_MOC_LITERAL(29, 335, 21), // "slotRunningMsgProcess"
+QT_MOC_LITERAL(30, 357, 3), // "msg"
+QT_MOC_LITERAL(31, 361, 5), // "value"
+QT_MOC_LITERAL(32, 367, 17), // "slotRefreshStatus"
+QT_MOC_LITERAL(33, 385, 3), // "num"
+QT_MOC_LITERAL(34, 389, 20), // "on_exportMsg_clicked"
+QT_MOC_LITERAL(35, 410, 14), // "slotItemChange"
+QT_MOC_LITERAL(36, 425, 6), // "rootIp"
+QT_MOC_LITERAL(37, 432, 24), // "setParentPartialyChecked"
+QT_MOC_LITERAL(38, 457, 14), // "clearChildItem"
+QT_MOC_LITERAL(39, 472, 30), // "midmachineNodePartiallyChecked"
+QT_MOC_LITERAL(40, 503, 9), // "itemIndex"
+QT_MOC_LITERAL(41, 513, 21), // "midmachineNodeChecked"
+QT_MOC_LITERAL(42, 535, 23), // "midmachineNodeUnchecked"
+QT_MOC_LITERAL(43, 559, 14), // "rootItemInsert"
+QT_MOC_LITERAL(44, 574, 9), // "rootIndex"
+QT_MOC_LITERAL(45, 584, 14), // "rootItemRemove"
+QT_MOC_LITERAL(46, 599, 16), // "parentItemInsert"
+QT_MOC_LITERAL(47, 616, 11), // "parentIndex"
+QT_MOC_LITERAL(48, 628, 16), // "parentItemRemove"
+QT_MOC_LITERAL(49, 645, 15), // "slaveItemManage"
+QT_MOC_LITERAL(50, 661, 15), // "slaveItemInsert"
+QT_MOC_LITERAL(51, 677, 10), // "childIndex"
+QT_MOC_LITERAL(52, 688, 15) // "slaveItemRemove"
 
     },
     "Widget\0sigdatasent\0\0cmd\0type\0"
@@ -96,10 +95,10 @@ QT_MOC_LITERAL(53, 708, 15) // "slaveItemRemove"
     "openCfgSlot\0on_openfile_clicked\0"
     "cfgBtnClickedSlot\0updateBtnClickedSlot\0"
     "clearBtnClickedSlot\0appSendBtnClickedSlot\0"
-    "eraseBtnClickedSlot\0mcipCfgBtnClickedSlot\0"
-    "slotRunningMsgProcess\0msg\0value\0"
-    "slotRefreshStatus\0num\0on_exportMsg_clicked\0"
-    "slotItemChange\0rootIp\0setParentPartialyChecked\0"
+    "mcipCfgBtnClickedSlot\0slotRunningMsgProcess\0"
+    "msg\0value\0slotRefreshStatus\0num\0"
+    "on_exportMsg_clicked\0slotItemChange\0"
+    "rootIp\0setParentPartialyChecked\0"
     "clearChildItem\0midmachineNodePartiallyChecked\0"
     "itemIndex\0midmachineNodeChecked\0"
     "midmachineNodeUnchecked\0rootItemInsert\0"
@@ -116,7 +115,7 @@ static const uint qt_meta_data_Widget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      30,   14, // methods
+      29,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -124,38 +123,37 @@ static const uint qt_meta_data_Widget[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    3,  164,    2, 0x06 /* Public */,
-       5,    2,  171,    2, 0x06 /* Public */,
+       1,    3,  159,    2, 0x06 /* Public */,
+       5,    2,  166,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       8,    2,  176,    2, 0x0a /* Public */,
-      12,    0,  181,    2, 0x08 /* Private */,
-      13,    0,  182,    2, 0x08 /* Private */,
-      14,    6,  183,    2, 0x08 /* Private */,
-      22,    0,  196,    2, 0x08 /* Private */,
-      23,    0,  197,    2, 0x08 /* Private */,
-      24,    0,  198,    2, 0x08 /* Private */,
-      25,    0,  199,    2, 0x08 /* Private */,
-      26,    0,  200,    2, 0x08 /* Private */,
-      27,    0,  201,    2, 0x08 /* Private */,
-      28,    0,  202,    2, 0x08 /* Private */,
-      29,    0,  203,    2, 0x08 /* Private */,
-      30,    4,  204,    2, 0x08 /* Private */,
-      33,    3,  213,    2, 0x08 /* Private */,
-      35,    0,  220,    2, 0x08 /* Private */,
-      36,    2,  221,    2, 0x08 /* Private */,
-      38,    1,  226,    2, 0x08 /* Private */,
-      39,    1,  229,    2, 0x08 /* Private */,
-      40,    2,  232,    2, 0x08 /* Private */,
-      42,    2,  237,    2, 0x08 /* Private */,
-      43,    2,  242,    2, 0x08 /* Private */,
-      44,    2,  247,    2, 0x08 /* Private */,
-      46,    2,  252,    2, 0x08 /* Private */,
-      47,    3,  257,    2, 0x08 /* Private */,
-      49,    2,  264,    2, 0x08 /* Private */,
-      50,    3,  269,    2, 0x08 /* Private */,
-      51,    4,  276,    2, 0x08 /* Private */,
-      53,    3,  285,    2, 0x08 /* Private */,
+       8,    2,  171,    2, 0x0a /* Public */,
+      12,    0,  176,    2, 0x08 /* Private */,
+      13,    0,  177,    2, 0x08 /* Private */,
+      14,    6,  178,    2, 0x08 /* Private */,
+      22,    0,  191,    2, 0x08 /* Private */,
+      23,    0,  192,    2, 0x08 /* Private */,
+      24,    0,  193,    2, 0x08 /* Private */,
+      25,    0,  194,    2, 0x08 /* Private */,
+      26,    0,  195,    2, 0x08 /* Private */,
+      27,    0,  196,    2, 0x08 /* Private */,
+      28,    0,  197,    2, 0x08 /* Private */,
+      29,    4,  198,    2, 0x08 /* Private */,
+      32,    3,  207,    2, 0x08 /* Private */,
+      34,    0,  214,    2, 0x08 /* Private */,
+      35,    2,  215,    2, 0x08 /* Private */,
+      37,    1,  220,    2, 0x08 /* Private */,
+      38,    1,  223,    2, 0x08 /* Private */,
+      39,    2,  226,    2, 0x08 /* Private */,
+      41,    2,  231,    2, 0x08 /* Private */,
+      42,    2,  236,    2, 0x08 /* Private */,
+      43,    2,  241,    2, 0x08 /* Private */,
+      45,    2,  246,    2, 0x08 /* Private */,
+      46,    3,  251,    2, 0x08 /* Private */,
+      48,    2,  258,    2, 0x08 /* Private */,
+      49,    3,  263,    2, 0x08 /* Private */,
+      50,    4,  270,    2, 0x08 /* Private */,
+      52,    3,  279,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::UShort, QMetaType::UChar, QMetaType::QVariant,    3,    4,    2,
@@ -173,23 +171,22 @@ static const uint qt_meta_data_Widget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::UShort, QMetaType::QStringList, QMetaType::UShort,    6,    3,   30,   31,
+    QMetaType::Void, QMetaType::QString, QMetaType::UChar, QMetaType::QStringList,    6,   33,   30,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::UShort, QMetaType::QStringList, QMetaType::UShort,    6,    3,   31,   32,
-    QMetaType::Void, QMetaType::QString, QMetaType::UChar, QMetaType::QStringList,    6,   34,   31,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString,   37,    7,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString,   36,    7,
     QMetaType::Void, 0x80000000 | 9,   10,
     QMetaType::Void, 0x80000000 | 9,   10,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   41,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   41,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   41,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   45,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   45,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   48,   45,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   48,   45,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   48,   45,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   52,   48,   45,    7,
-    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar,   52,   48,   45,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   40,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   40,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   40,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   44,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::QString,   44,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   47,   44,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar,   47,   44,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   47,   44,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar, QMetaType::QString,   51,   47,   44,    7,
+    QMetaType::Void, QMetaType::UChar, QMetaType::UChar, QMetaType::UChar,   51,   47,   44,
 
        0        // eod
 };
@@ -212,24 +209,23 @@ void Widget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 9: _t->updateBtnClickedSlot(); break;
         case 10: _t->clearBtnClickedSlot(); break;
         case 11: _t->appSendBtnClickedSlot(); break;
-        case 12: _t->eraseBtnClickedSlot(); break;
-        case 13: _t->mcipCfgBtnClickedSlot(); break;
-        case 14: _t->slotRunningMsgProcess((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< ushort(*)>(_a[2])),(*reinterpret_cast< QStringList(*)>(_a[3])),(*reinterpret_cast< ushort(*)>(_a[4]))); break;
-        case 15: _t->slotRefreshStatus((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QStringList(*)>(_a[3]))); break;
-        case 16: _t->on_exportMsg_clicked(); break;
-        case 17: _t->slotItemChange((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 18: _t->setParentPartialyChecked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
-        case 19: _t->clearChildItem((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
-        case 20: _t->midmachineNodePartiallyChecked((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 21: _t->midmachineNodeChecked((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 22: _t->midmachineNodeUnchecked((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 23: _t->rootItemInsert((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 24: _t->rootItemRemove((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
-        case 25: _t->parentItemInsert((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
-        case 26: _t->parentItemRemove((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
-        case 27: _t->slaveItemManage((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
-        case 28: _t->slaveItemInsert((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< uchar(*)>(_a[3])),(*reinterpret_cast< QString(*)>(_a[4]))); break;
-        case 29: _t->slaveItemRemove((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< uchar(*)>(_a[3]))); break;
+        case 12: _t->mcipCfgBtnClickedSlot(); break;
+        case 13: _t->slotRunningMsgProcess((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< ushort(*)>(_a[2])),(*reinterpret_cast< QStringList(*)>(_a[3])),(*reinterpret_cast< ushort(*)>(_a[4]))); break;
+        case 14: _t->slotRefreshStatus((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QStringList(*)>(_a[3]))); break;
+        case 15: _t->on_exportMsg_clicked(); break;
+        case 16: _t->slotItemChange((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 17: _t->setParentPartialyChecked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
+        case 18: _t->clearChildItem((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1]))); break;
+        case 19: _t->midmachineNodePartiallyChecked((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 20: _t->midmachineNodeChecked((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 21: _t->midmachineNodeUnchecked((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 22: _t->rootItemInsert((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 23: _t->rootItemRemove((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 24: _t->parentItemInsert((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
+        case 25: _t->parentItemRemove((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2]))); break;
+        case 26: _t->slaveItemManage((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
+        case 27: _t->slaveItemInsert((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< uchar(*)>(_a[3])),(*reinterpret_cast< QString(*)>(_a[4]))); break;
+        case 28: _t->slaveItemRemove((*reinterpret_cast< uchar(*)>(_a[1])),(*reinterpret_cast< uchar(*)>(_a[2])),(*reinterpret_cast< uchar(*)>(_a[3]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -287,13 +283,13 @@ int Widget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 30)
+        if (_id < 29)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 30;
+        _id -= 29;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 30)
+        if (_id < 29)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 30;
+        _id -= 29;
     }
     return _id;
 }

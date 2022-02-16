@@ -5,9 +5,13 @@
 
 
 
+
+
 #define  POWERNUM               3
 
 
+
+#define  MAX_RESEND_TIMES        50
 #define  APP_SIZE               800000
 #define  WORDNUM                256
 #define  MAX_SEND_APPSIZE       (WORDNUM*4)
@@ -15,6 +19,7 @@
 #define  RESENDTIME             3000   //重发时间间隔
 #define  SEND_BUFF_LEN          2000
 #define  RECV_BUFF_LEN          2000
+#define  ERASERESEND            10000  //擦除重发
 #define  mcipListPath           "./ipcfig.txt"
 
 
@@ -23,34 +28,34 @@
 
 enum  updateCmd{
 
-                 CONNECTTARGET = 0X0401,      //与目标板建立联机
-                 APPJUMPBOOT ,        //BOOT跳转
-                 ERASESECTOR ,          //擦除扇区
-                 BOOTWRITEDATA ,        //写APP数据
-                 BOOTJUMPAPP ,              //BOOT跳转到APP
-                 BACKUPAPP,             //备份之前的APP数据
-                 GETAPPFILE,           //从主线程获得APP文件
-                 NETLOST ,              //tcp掉线,,
-                 UNCONNECT,              //无法连接
-                 MANUALSENDDATA,        //手动升级APP
-                 MANUALERASE            //手动擦除
-    };
+    CONNECTTARGET = 0x0401,      //与目标板建立联机
+    APPJUMPBOOT ,        //BOOT跳转
+    ERASESECTOR ,          //擦除扇区
+    BOOTWRITEDATA ,        //写APP数据
+    BOOTJUMPAPP ,              //BOOT跳转到APP
+    BACKUPAPP,             //备份之前的APP数据,,,
+    GETAPPFILE,           //从主线程获得APP文件
+    NETLOST ,              //tcp掉线,,
+    UNCONNECT,              //无法连接
+    MANUALSENDDATA,        //手动升级APP
+    MANUALERASE            //手动擦除
+};
 
 enum   lcUpdateCmd{
 
-          PCCONNECTLC   = 0X41,
-          LCJUMPBOOT ,
-          LCERASESECTOR ,
-          LCBOOTWRITEDATA,
-          LCBOOTJUMPAPP
+    PCCONNECTLC   = 0X41,
+    LCJUMPBOOT ,
+    LCERASESECTOR ,
+    LCBOOTWRITEDATA,
+    LCBOOTJUMPAPP
 
 };
 
 # pragma pack(1)
 typedef   struct
 {
-     ushort  txLen;
-     uchar   txBuf[ SEND_BUFF_LEN];
+    ushort  txLen;
+    uchar   txBuf[ SEND_BUFF_LEN];
 }txNode;
 
 
@@ -111,26 +116,26 @@ typedef   struct
 typedef struct {
 
 
-  //steptype, sta, event,rsv
-   //uint status;
-  quint8 stepType;
-  quint8 event;
-  quint8 sta;
-  quint8 DDC;
+    //steptype, sta, event,rsv
+    //uint status;
+    quint8 stepType;
+    quint8 event;
+    quint8 sta;
+    quint8 DDC;
 
-   float batVoltage1;  //电池电压
-   float current1;  //霍尔电流
-   float batVoltage2;  //第二路电压
-   float current2;  //电感电流
-   float busVoltage;  //母线电压
-   float outVoltage;  //电容电压
-   float portVol;      //端口电压
+    float batVoltage1;  //电池电压
+    float current1;  //霍尔电流
+    float batVoltage2;  //第二路电压
+    float current2;  //电感电流
+    float busVoltage;  //母线电压
+    float outVoltage;  //电容电压
+    float portVol;      //端口电压
 
-   //
-   float vPidOut;
-   float iInnPidOut;
-   float iExtPidOut;
-   float testVariable;
+    //
+    float vPidOut;
+    float iInnPidOut;
+    float iExtPidOut;
+    float testVariable;
 
 
 }LowVoltageDCDCSampleDataStruct;
@@ -141,29 +146,29 @@ typedef struct {
 typedef   struct {
 
 
-  struct{
+    struct{
 
-//    uint chnlNum;
-//    uint stepType;
-//    uint vloopSel;
-//    uint iloopSel;
-//    uint funcSwitch;
-    qint8 chnlNum;
-    qint8 stepType;
-    qint8 ivloopSel;
-    qint8 funcSwitch;
-  }DebugParameterBitField;
+        //    uint chnlNum;
+        //    uint stepType;
+        //    uint vloopSel;
+        //    uint iloopSel;
+        //    uint funcSwitch;
+        qint8 chnlNum;
+        qint8 stepType;
+        qint8 ivloopSel;
+        qint8 funcSwitch;
+    }DebugParameterBitField;
 
-   uint MainPara1;
-   uint MainPara2;
-   uint MainPara3;
-   uint MainPara4;
-   uint MainPara5;
+    uint MainPara1;
+    uint MainPara2;
+    uint MainPara3;
+    uint MainPara4;
+    uint MainPara5;
 
-   uint LimitPara1;
-   uint LimitPara2;
-   uint LimitPara3;
-   uint LimitPara4;
+    uint LimitPara1;
+    uint LimitPara2;
+    uint LimitPara3;
+    uint LimitPara4;
 
 }DebugParameterBitField;
 
@@ -173,8 +178,8 @@ typedef   struct
 {
 
 
-        uchar  boxId;
-        ushort boxVersion;
+    uchar  boxId;
+    ushort boxVersion;
 
 
 }LcMsg;  //单个电源柜版本号

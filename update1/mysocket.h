@@ -9,6 +9,8 @@
 #include <QObject>
 #include <QTimer>
 #include "struct.h"
+#include<QDateTime>
+
 class QTimer;
 
 class MySocket : public QTcpSocket
@@ -26,16 +28,16 @@ public:
 signals:
 
 
-    void  sigRunMsgToUi(QString ip, ushort  cmd,QStringList  msg, ushort value);//运行信息返回 UI
+    void sigRunMsgToUi(QString ip, ushort  cmd,QStringList  msg, ushort value);//运行信息返回 UI
 
 private slots:
-    void timeoutMethod(void);
+    void  timeoutMethod(void);
 
-    void slotConnected();
-    void slotDisconnected();
+    void  slotConnected();
+    void  slotDisconnected();
 
-    void recvData(void);
-    void recvDataMethod(const uchar *data);
+    void  recvData(void);
+    void  recvDataMethod(const uchar *data);
 
     void  slotDataSent(ushort cmd,uchar type,QVariant variant); //
     void  cmdConnectTarget(uchar target,  uchar addr);  //pc与target 建立 联机
@@ -47,7 +49,8 @@ private slots:
     void  readBackLcformerApp(void);  //读取回之前的下位机APP进行备份
     void  backUpFile(QString  filename);     //读回升级备份
 
-    void tcpSendData(uchar *txBuf,const ushort len);   //发送数据
+    void  tcpSendData(uchar *txBuf,const ushort len);   //发送数据
+
 
 
 
@@ -56,9 +59,9 @@ private:
      updateTarget  m_target;   //目的设备
      uchar  m_box;     //正在升级的下位机地址
      uchar  lcAddrIndex;    //地址序列
-      uchar resendTimes ;    //重发次数
+     uchar resendTimes ;    //重发次数
 
-      QTimer * m_timer;   //
+    QTimer * m_timer;   //
     bool   updateStart;
     uchar recvbuf[RECV_BUFF_LEN ];  //接收数据
     uchar  txBuf[SEND_BUFF_LEN  ];

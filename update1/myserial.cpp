@@ -273,7 +273,7 @@ void Myserial::slotDataSent(ushort cmd, uchar type, QVariant variant)
         m_target = type;
         addrs = ( targetAddr *)variant.data();
         this->m_powerList   =addrs->powerAddrList ;
-        if(this->m_powerList.isEmpty()==NULL)
+        if(this->m_powerList.isEmpty()==false)
         {
             lcAddrIndex = 0;
             m_addr =m_powerList.at(  lcAddrIndex );
@@ -281,8 +281,6 @@ void Myserial::slotDataSent(ushort cmd, uchar type, QVariant variant)
             lcbootEraseAppSectors(m_target,m_addr);
             m_timer->start(RESENDTIME);
         }
-
-
         break;
     case BOOTWRITEDATA :  //自动发送升级数据
         addrs = ( targetAddr *)variant.data();
@@ -590,7 +588,6 @@ void Myserial::recvData()
 {
     typedef  enum{WAIT_HEAD,WAIT_LEN,WAIT_MSG}wait;
     QByteArray  array;
-    uint tmp;
     static wait m_wait = WAIT_HEAD;
     static uchar head_cnt=0;
     static uint recv_cnt=0,appLenght=0;

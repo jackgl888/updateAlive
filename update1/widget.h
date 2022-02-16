@@ -159,7 +159,7 @@ private slots:
 
 
     void appSendBtnClickedSlot(void); //手动下发
-    void eraseBtnClickedSlot(void); //擦除
+
 
     void mcipCfgBtnClickedSlot(void);  //mcip配置
 

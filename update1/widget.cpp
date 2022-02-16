@@ -88,7 +88,7 @@ void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, us
     switch (cmd) {
 
     case NETLOST :  //掉线
-    //    disableTreeItems(ip); //  //失能父子节点
+
         m_list =  this->msgModle->findItems(ip);   //at 0 为消息  at 1 为
         if( m_list.isEmpty())
             return;
@@ -96,25 +96,21 @@ void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, us
         this->msgModle->setData(this->msgModle->index(row,2),msg.at(0)); //指示程序运行层
         this->msgModle->setData(this->msgModle->index(row,4),msg.at(1));//信息
         break;
-     case  UNCONNECT://无法连接
-           msgBox->append(msg.at(1));
+    case  UNCONNECT://无法连接
+        msgBox->append(msg.at(1));
 
         break;
 
     case    CONNECTTARGET:    //boot联机
 
-
         if(trayTree->topLevelItemCount()==0)  //没有节点
-         treeWidgetInit( ip,0, value,  msg);  //创建
+            treeWidgetInit( ip,0, value,  msg);  //创建
         else  // 有节
-         slotRefreshStatus(ip,value,msg); //
-
+            slotRefreshStatus(ip,value,msg); //
         msgBox->append(msg.at(1));
-        return;
         break;
 
     case BOOTWRITEDATA:    //写数据
-    //   msgBox->append(msg.at(1));
         m_list =  this->msgModle->findItems(ip);   //at 0 为消息  at 1 为
         if( m_list.isEmpty())
             return;
@@ -126,7 +122,6 @@ void Widget:: slotRunningMsgProcess(QString ip, ushort  cmd,QStringList  msg, us
         break;
 
     case GETAPPFILE:         //转发app文件
-
         msgBox->append(msg.at(1));
         break;
 
@@ -493,61 +488,7 @@ void Widget::appSendBtnClickedSlot()
 
 }
 
-//擦除
-void Widget::eraseBtnClickedSlot()
-{
 
-    uchar  childCount;
-
-    QVariant  variant;
-    targetAddr  m_targetAddr;
-
-    static bool  updateBtnMutex  = true;
-
-    // if( updateBtnMutex  == true)
-    //  {
-    //  updateBtnMutex =false;
-
-    m_targetAddr.mcAddr=nullptr;
-
-    for(uchar i = 0;i<trayTree->topLevelItemCount();i++)
-    {
-        if(  trayTree->topLevelItem(i)->checkState(0)!= Qt::Unchecked)//有节点被选择
-        {
-            if(this->deviceBox->currentText() =="中位机")
-            {
-                if( trayTree->topLevelItem(i)->checkState(0)==Qt::Checked)//中位机被选中
-                {
-                    m_targetAddr.mcAddr=trayTree->topLevelItem(i)->text(0);
-                    variant.setValue( m_targetAddr);
-                    emit sigdatasent( MANUALERASE,  MCTRANSMIT,variant);
-
-                }
-            }
-            else if(this->deviceBox->currentText() =="电源柜")
-            {
-                childCount=  trayTree->topLevelItem(i)->child(0)->childCount();
-                for(uchar  j= 0;j<childCount;j++)
-                {
-                    if( trayTree->topLevelItem(i)->child(0)->child(j)->checkState(0)==Qt::Checked)    //电源主板被选择
-                    {
-                        m_targetAddr.mcAddr=trayTree->topLevelItem(i)->text(0);
-                        m_targetAddr.powerAddrList.append( trayTree->topLevelItem(i)->child(0)->child(j)->text(0).toUShort());  //把升级的电源柜地址收集入列
-                        variant.setValue(m_targetAddr);
-                        emit sigdatasent( MANUALERASE,  POWERMASTER,variant);
-                    }
-
-
-                }
-
-            }
-        }
-    }
-    //  }
-
-
-
-}
 
 
 
@@ -556,22 +497,25 @@ void Widget::eraseBtnClickedSlot()
 //配置mcip
 void Widget::mcipCfgBtnClickedSlot()
 {
-    QString text;
+    QString text,msg;
     QFile   file(  mcipListPath   );
+    QDateTime curDateTime=QDateTime::currentDateTime();
 
-    if(file.open(QFile::ReadWrite|QFile::Text))
+    if(file.open(QFile::ReadWrite|QFile::Text|QFile::Append))
     {
 
         QTextStream   out(&file);
         text = QString("%1%2%3").arg(m_ipEdit->text()).arg(",").arg(QString::number( targetPort->value()));
         if(mcIplist.contains( text)!=true)
         {
-              out<<text<<endl;
-              msgBox->append("配置成功！");
+            out<<text<<endl;
+            msg = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg(" 配置成功！");
+            msgBox->append(msg);
+
         }
 
         else
-       QMessageBox::information(NULL, "Title", "IP已经存在！");
+            QMessageBox::information(NULL, "Title", "IP已经存在！");
 
     }
     file.close();
@@ -765,152 +709,152 @@ void Widget::bottomLayOutCtrlInit()
 
     QFont font("STFangsong",25);
     //初始化串口ui
-       QStringList list;
+    QStringList list;
 
-       list.clear();
-       for(uchar i = 0;i<10;i++)
-           list.append(QString("%1%2").arg("COM").arg(QString::number(i)));
+    list.clear();
+    for(uchar i = 0;i<10;i++)
+        list.append(QString("%1%2").arg("COM").arg(QString::number(i)));
 
-       this->serialBox = new QComboBox(this);
-       this->serialBox->addItems(list);
-        QLabel *serialLab = new QLabel("串口名：",this);
-       QHBoxLayout  *serialLayout = new QHBoxLayout();
-
-
-
-       serialCheckBox = new  QCheckBox (this);
-       serialCheckBox ->setChecked(false);
-       serialLayout->addWidget(serialCheckBox);
-
-       serialLayout->addWidget(serialLab);
-          serialLayout->addStretch(2);
-       serialLayout->addWidget(serialBox);
-
-
-       //PC端口与ip 初始化
-         QLabel  *mcPortLab  = new QLabel(tr("端口:"),this);
-       this->portbox  = new QSpinBox (this);
-       this->portbox->setMaximum(50000);
-       this->portbox->setValue(10002);
-
-
-       portLayout  = new QHBoxLayout();
-
-       portLayout->addWidget(mcPortLab);
-       portLayout->addWidget(this->portbox);
+    this->serialBox = new QComboBox(this);
+    this->serialBox->addItems(list);
+    QLabel *serialLab = new QLabel("串口名：",this);
+    QHBoxLayout  *serialLayout = new QHBoxLayout();
 
 
 
-        QLabel    *m_editerLab = new QLabel(tr("IP:"),this);
-       //   this->m_editer  = new QIPlinEditer(this);  //ip输入框
-       this->ipbox = new QComboBox(this);
-       m_editerLayout  = new QHBoxLayout();
-       m_editerLayout->addWidget(m_editerLab);
-       m_editerLayout->addWidget(this->ipbox);
+    serialCheckBox = new  QCheckBox (this);
+    serialCheckBox ->setChecked(false);
+    serialLayout->addWidget(serialCheckBox);
 
-       QVBoxLayout *pcAddrLayout = new QVBoxLayout();
-        pcAddrLayout->addLayout(m_editerLayout);
-        pcAddrLayout->addLayout(portLayout);
+    serialLayout->addWidget(serialLab);
+    serialLayout->addStretch(2);
+    serialLayout->addWidget(serialBox);
 
 
-       //设备选择框初始化
-       QStringList strList;
-
-       strList<<"电源柜"<<"中位机"<<"温度控制板"<<"转发板"<<"工装主控板"
-             <<"温度modbus协议"<<"电源从板"<<"电源下位机";
-       this->deviceBox  = new QComboBox(this);
-       this->deviceBox->addItems(strList);
-        QLabel  *machineLab = new QLabel(tr("设备类型:"),this);
-         QHBoxLayout *machineLayout = new QHBoxLayout();
-       machineLayout->addWidget(machineLab);
-       machineLayout->addWidget(this->deviceBox);
-
-       //PC配置按钮初始化
-       this->cfgBtn  = new QPushButton("连接",this);
-      this->cfgBtn->setFixedSize(100,120);
-        this->cfgBtn->setStyleSheet("QPushButton{background-color:rgb(185,255,203);\
-                                      color: black;   border-radius: 10px;  border: 2px groove gray; \
-       border-style: outset;}"\
-       "QPushButton:hover{background-color:red; color: white;}"\
-       "QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
-       this->cfgBtn ->setFont(font);
-       QVBoxLayout  *touchVLayout = new QVBoxLayout();
-       touchVLayout ->addLayout(serialLayout);
-       touchVLayout->addLayout (pcAddrLayout);
-       touchVLayout->addLayout(machineLayout);
-
-       QHBoxLayout *touchBLayout = new QHBoxLayout();
-       touchBLayout->addLayout(touchVLayout);
-       touchBLayout->addWidget(cfgBtn);
-
-       QGroupBox *touchBox = new QGroupBox("本机",this);
-
-       touchBox->setLayout(touchBLayout);
-      touchBox->setStyleSheet("QGroupBox{  color: black;   border-radius: 10px;  border: 2px groove gray;  border-style: outset;}");
+    //PC端口与ip 初始化
+    QLabel  *mcPortLab  = new QLabel(tr("端口:"),this);
+    this->portbox  = new QSpinBox (this);
+    this->portbox->setMaximum(50000);
+    this->portbox->setValue(10002);
 
 
-       this->updateBtn = new  QPushButton(tr("升级"),this);
-      // this->updateBtn->setMaximumHeight(200);
-       this->updateBtn->setFont(font);
-       this->updateBtn->setStyleSheet("QPushButton{background-color:rgb(185,255,203);\
-                                      color: black;   border-radius: 10px;  border: 2px groove gray; \
-       border-style: outset;}"\
-       "QPushButton:hover{background-color:red; color: white;}"\
-       "QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
+    portLayout  = new QHBoxLayout();
 
-       updateBtn->setEnabled(false);
-
-      //目标IP,PORT输入框
-       QLabel *ipLab = new QLabel("IP：",this);
-       m_ipEdit = new QIPlinEditer(this);   //IP输入框
-       QLabel  *portLab=new QLabel("端口：",this);
-       targetPort = new QSpinBox(this);
-       targetPort->setMaximum(65535);
-       targetPort->setValue(10001);
-
-       QHBoxLayout *ipLayout = new QHBoxLayout();
-       QHBoxLayout  *portLayout = new QHBoxLayout();
-       ipLayout->addWidget(ipLab);
-       ipLayout->addWidget( m_ipEdit);
-       portLayout->addWidget(portLab);
-       portLayout->addWidget(targetPort);
-       mcipCfgBtn = new QPushButton("配置",this);
-           mcipCfgBtn ->setFixedSize(100,70);
-           mcipCfgBtn->setStyleSheet("QPushButton{background-color:rgb(185,255,203);\
-                                         color: black;   border-radius: 10px;  border: 2px groove gray; \
-          border-style: outset;}"\
-          "QPushButton:hover{background-color:red; color: white;}"\
-          "QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
-    mcipCfgBtn ->setFont(font);
-       QVBoxLayout *cfgIpLayout  = new QVBoxLayout();
-       cfgIpLayout->addLayout(ipLayout);
-       cfgIpLayout->addLayout(portLayout);
-
-     QHBoxLayout *targetIpLayout = new QHBoxLayout();
-     targetIpLayout->addLayout(cfgIpLayout);
-      targetIpLayout->addWidget(mcipCfgBtn);
-       mcipCfgBox = new QGroupBox("目标",this);
-
-       mcipCfgBox->setLayout(targetIpLayout);
-       mcipCfgBox->setStyleSheet("QGroupBox{  color: black;   border-radius: 10px;  border: 2px groove gray;  border-style: outset;}");
-
-
-       //右下布局
-      QVBoxLayout* rightBottomLayout  = new QVBoxLayout();//
-      rightBottomLayout->addWidget(mcipCfgBox);  //targetIP
-      rightBottomLayout->addWidget(touchBox);
-      rightBottomLayout->addWidget(updateBtn);
+    portLayout->addWidget(mcPortLab);
+    portLayout->addWidget(this->portbox);
 
 
 
-    this->msgBox = new     QTextBrowser(this);  //消息 框
-    bottomLayout = new QHBoxLayout();
-    bottomLayout->addWidget(msgBox);
-    bottomLayout->addLayout( rightBottomLayout);
-    connect(this->fileOpen,SIGNAL(clicked()),this,SLOT(on_openfile_clicked()));  //打开升级文件
-    connect(cfgBtn,SIGNAL(clicked()),this,SLOT(cfgBtnClickedSlot()));    //连接tcp中位机
-    connect(mcipCfgBtn,SIGNAL(clicked()),this,SLOT(mcipCfgBtnClickedSlot())); //配置中位机ip
-    connect(this->updateBtn,SIGNAL(clicked()),this,SLOT(updateBtnClickedSlot()));    //执行具体升级过程
+    QLabel    *m_editerLab = new QLabel(tr("IP:"),this);
+    //   this->m_editer  = new QIPlinEditer(this);  //ip输入框
+    this->ipbox = new QComboBox(this);
+    m_editerLayout  = new QHBoxLayout();
+    m_editerLayout->addWidget(m_editerLab);
+    m_editerLayout->addWidget(this->ipbox);
+
+    QVBoxLayout *pcAddrLayout = new QVBoxLayout();
+    pcAddrLayout->addLayout(m_editerLayout);
+    pcAddrLayout->addLayout(portLayout);
+
+
+    //设备选择框初始化
+    QStringList strList;
+
+    strList<<"电源柜"<<"中位机"<<"温度控制板"<<"转发板"<<"工装主控板"
+          <<"温度modbus协议"<<"电源从板"<<"电源下位机";
+    this->deviceBox  = new QComboBox(this);
+    this->deviceBox->addItems(strList);
+    QLabel  *machineLab = new QLabel(tr("设备类型:"),this);
+    QHBoxLayout *machineLayout = new QHBoxLayout();
+    machineLayout->addWidget(machineLab);
+    machineLayout->addWidget(this->deviceBox);
+
+    //PC配置按钮初始化
+    this->cfgBtn  = new QPushButton("连接",this);
+    this->cfgBtn->setFixedSize(100,120);
+    this->cfgBtn->setStyleSheet("QPushButton{background-color:rgb(185,255,203);\
+                                color: black;   border-radius: 10px;  border: 2px groove gray; \
+    border-style: outset;}"\
+"QPushButton:hover{background-color:red; color: white;}"\
+"QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
+this->cfgBtn ->setFont(font);
+QVBoxLayout  *touchVLayout = new QVBoxLayout();
+touchVLayout ->addLayout(serialLayout);
+touchVLayout->addLayout (pcAddrLayout);
+touchVLayout->addLayout(machineLayout);
+
+QHBoxLayout *touchBLayout = new QHBoxLayout();
+touchBLayout->addLayout(touchVLayout);
+touchBLayout->addWidget(cfgBtn);
+
+QGroupBox *touchBox = new QGroupBox("本机",this);
+
+touchBox->setLayout(touchBLayout);
+touchBox->setStyleSheet("QGroupBox{  color: black;   border-radius: 10px;  border: 2px groove gray;  border-style: outset;}");
+
+
+this->updateBtn = new  QPushButton(tr("升级"),this);
+// this->updateBtn->setMaximumHeight(200);
+this->updateBtn->setFont(font);
+this->updateBtn->setStyleSheet("QPushButton{background-color:rgb(185,255,203);\
+                               color: black;   border-radius: 10px;  border: 2px groove gray; \
+border-style: outset;}"\
+"QPushButton:hover{background-color:red; color: white;}"\
+"QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
+
+updateBtn->setEnabled(false);
+
+//目标IP,PORT输入框
+QLabel *ipLab = new QLabel("IP：",this);
+m_ipEdit = new QIPlinEditer(this);   //IP输入框
+QLabel  *portLab=new QLabel("端口：",this);
+targetPort = new QSpinBox(this);
+targetPort->setMaximum(65535);
+targetPort->setValue(10001);
+
+QHBoxLayout *ipLayout = new QHBoxLayout();
+QHBoxLayout  *portLayout = new QHBoxLayout();
+ipLayout->addWidget(ipLab);
+ipLayout->addWidget( m_ipEdit);
+portLayout->addWidget(portLab);
+portLayout->addWidget(targetPort);
+mcipCfgBtn = new QPushButton("配置",this);
+mcipCfgBtn ->setFixedSize(100,70);
+mcipCfgBtn->setStyleSheet("QPushButton{background-color:rgb(185,255,203);\
+                          color: black;   border-radius: 10px;  border: 2px groove gray; \
+border-style: outset;}"\
+"QPushButton:hover{background-color:red; color: white;}"\
+"QPushButton:pressed{background-color:rgb(219,237,255); border-style: inset; }");
+mcipCfgBtn ->setFont(font);
+QVBoxLayout *cfgIpLayout  = new QVBoxLayout();
+cfgIpLayout->addLayout(ipLayout);
+cfgIpLayout->addLayout(portLayout);
+
+QHBoxLayout *targetIpLayout = new QHBoxLayout();
+targetIpLayout->addLayout(cfgIpLayout);
+targetIpLayout->addWidget(mcipCfgBtn);
+mcipCfgBox = new QGroupBox("目标",this);
+
+mcipCfgBox->setLayout(targetIpLayout);
+mcipCfgBox->setStyleSheet("QGroupBox{  color: black;   border-radius: 10px;  border: 2px groove gray;  border-style: outset;}");
+
+
+//右下布局
+QVBoxLayout* rightBottomLayout  = new QVBoxLayout();//
+rightBottomLayout->addWidget(mcipCfgBox);  //targetIP
+rightBottomLayout->addWidget(touchBox);
+rightBottomLayout->addWidget(updateBtn);
+
+
+
+this->msgBox = new     QTextBrowser(this);  //消息 框
+bottomLayout = new QHBoxLayout();
+bottomLayout->addWidget(msgBox);
+bottomLayout->addLayout( rightBottomLayout);
+connect(this->fileOpen,SIGNAL(clicked()),this,SLOT(on_openfile_clicked()));  //打开升级文件
+connect(cfgBtn,SIGNAL(clicked()),this,SLOT(cfgBtnClickedSlot()));    //连接tcp中位机
+connect(mcipCfgBtn,SIGNAL(clicked()),this,SLOT(mcipCfgBtnClickedSlot())); //配置中位机ip
+connect(this->updateBtn,SIGNAL(clicked()),this,SLOT(updateBtnClickedSlot()));    //执行具体升级过程
 
 }
 
@@ -988,13 +932,13 @@ void Widget::slotRefreshStatus(QString ip,uchar num ,QStringList msg)
     {
         if(trayTree->topLevelItem(i)->text(0)==ip)
         {
-//            if( trayTree->topLevelItem(i)->isDisabled()==true)
-//                trayTree->topLevelItem(i)->setDisabled(false);
+            //            if( trayTree->topLevelItem(i)->isDisabled()==true)
+            //                trayTree->topLevelItem(i)->setDisabled(false);
             trayTree->topLevelItem(i)->setText(1,msg.at(2));
             if(deviceBox->currentText()=="电源柜")
             {
                 for (uchar j=0;j<num;j++)
-                trayTree->topLevelItem(i)->child(0)->child(msg.at(3+2*j).toShort())->setText(1, msg.at(4+2*i));
+                    trayTree->topLevelItem(i)->child(0)->child(msg.at(3+2*j).toShort())->setText(1, msg.at(4+2*i));
             }
             return;
         }
@@ -1023,7 +967,7 @@ void Widget::openfile( QString filename)
                 line = stream.readLine();
                 if(!line.isEmpty())
                 {
-                        mcIplist.append(line);
+                    mcIplist.append(line);
                 }
 
             }while(!line.isEmpty());
@@ -1051,11 +995,14 @@ void Widget::cfgBtnClickedSlot()
     static bool cfgBtnMutex=true;
     QString ip;
     ushort port = 0 ;
-
-
+    QDateTime curDateTime=QDateTime::currentDateTime();
+    QString text;
     if(cfgBtnMutex == true)
     {
         cfgBtnMutex = false;
+
+         text = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg("正在连接中位机服务器...");
+         msgBox->append(text);
         openfile(  mcipListPath ); //读取ip到list
         if(this->serialCheckBox->isChecked()==true)  //串口通信
         {
@@ -1073,33 +1020,31 @@ void Widget::cfgBtnClickedSlot()
                 {
                     for(uchar i = 0;i<mcIplist.count();i++)
                     {
-                          QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
-                         QString    mcIp= pieces.value(0);
-                          ushort   mcPort = pieces.value(1).toUShort();
-                          clientThreadInit(ip, pieces.value(0), true, port, pieces.value(1).toUShort(), MCTRANSMIT) ;
+                        QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
+                        clientThreadInit(ip, pieces.value(0), true, port, pieces.value(1).toUShort(), MCTRANSMIT) ;
                     }
                 }
                 else
                 {
-                    msgBox->append("中位机ip列表为空！");
+                    text = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg("中位机ip列表为空！");
+                    msgBox->append(text);
                 }
             }
             else if(deviceBox->currentText()=="电源柜")
             {
-                  if(mcIplist.isEmpty()!=true)
-                  {
-                      for(uchar i = 0;i<mcIplist.count();i++)
-                      {
-                            QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
-                            ushort mcPort = pieces.value(1).toUShort();
-                            QString mcIp = pieces.value(0);
-                            clientThreadInit(ip, mcIp, true, port,pieces.value(1).toUShort(), POWERMASTER) ;
-                      }
-                  }
-                  else
-                  {
-                       msgBox->append("中位机ip列表为空！");
-                  }
+                if(mcIplist.isEmpty()!=true)
+                {
+                    for(uchar i = 0;i<mcIplist.count();i++)
+                    {
+                        QStringList pieces= mcIplist.at(i).split(",",QString::SkipEmptyParts);
+                        clientThreadInit(ip,  pieces.value(0), true, port,pieces.value(1).toUShort(), POWERMASTER) ;
+                    }
+                }
+                else
+                {
+                    text = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg("中位机ip列表为空！");
+                    msgBox->append(text);
+                }
             }
             else
                 ;
@@ -1119,7 +1064,7 @@ void Widget::clientThreadInit(QString myIp, QString  mcId, bool isNet, ushort my
     
     serverThread  *thread = new serverThread(myIp,mcId, isNet,myPort, mcPort ,target,this);
     connect(this,SIGNAL(sigdatasent(ushort,uchar,QVariant)),thread,SLOT(slotSendUpdateCmd(ushort,uchar,QVariant))); //ui命令到线程
-                                                                                                                   //线程到ui
+    //线程到ui
     //接收running msg
     connect(thread,SIGNAL(sigSendRunningMsg(QString,ushort,QStringList,ushort)),this,
             SLOT(slotRunningMsgProcess(QString,ushort,QStringList,ushort)));
@@ -1143,17 +1088,15 @@ void Widget::updateBtnClickedSlot(void)
     QVariant  variant;
     targetAddr  m_targetAddr;
 
-    static bool  updateBtnMutex  = true;
+//    static bool  updateBtnMutex  = true;
+    QDateTime curDateTime=QDateTime::currentDateTime();
+    QString text;
+//    if( updateBtnMutex  == true)  //初次升级
+//    {
+//        updateBtnMutex =false;
+        text = QString("%1%2").arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss")).arg("开始执行在线升级...");
+        msgBox->append(text);
 
-    if( updateBtnMutex  == true)
-    {
-        updateBtnMutex =false;
-
-        m_targetAddr.mcAddr=nullptr;
-        m_targetAddr.mcAddr="192.168.0.100";
-        variant.setValue( m_targetAddr);
-        emit sigdatasent(APPJUMPBOOT, MCTRANSMIT,variant);
-#if 0
         for(uchar i = 0;i<trayTree->topLevelItemCount();i++)
         {
             if(  trayTree->topLevelItem(i)->checkState(0)!= Qt::Unchecked)//有节点被选择
@@ -1181,8 +1124,9 @@ void Widget::updateBtnClickedSlot(void)
                 }
             }
         }
-#endif
-    }
+
+
+
 
 
 }
@@ -1396,7 +1340,7 @@ void Widget::dropEvent(QDropEvent *event)
     QString fileName;
     updatePara   para;
     QVariant variant;
-
+   static  bool progbarMutex = true;
     
     QList<QUrl> urls = event->mimeData()->urls();
     if(urls.isEmpty())
@@ -1414,9 +1358,19 @@ void Widget::dropEvent(QDropEvent *event)
     if(para.totalBytes% MAX_SEND_APPSIZE!= 0)
         para.totalSdtimes+=1;
     para.lastbytes = para.totalBytes%MAX_SEND_APPSIZE;  //剩余要发送的字节数
+   if(progbarMutex == true)
+   {
+       progbarMutex =false;
+       this->progressBarDelegate =  new pgbarDelegate(   para.totalSdtimes,PROBARCOlUMN ,this);  //单元格设置进度条代理
+       this->msgTable->setItemDelegate(this->progressBarDelegate);
+   }
+   else
+   {
+       delete  progressBarDelegate;
+       this->progressBarDelegate =  new pgbarDelegate(   para.totalSdtimes,PROBARCOlUMN ,this);  //单元格设置进度条代理
+       this->msgTable->setItemDelegate(this->progressBarDelegate);
+   }
 
-    this->progressBarDelegate =  new pgbarDelegate(   para.totalSdtimes,PROBARCOlUMN ,this);  //单元格设置进度条代理
-    this->msgTable->setItemDelegate(this->progressBarDelegate);
 
     if( localfile->open(QIODevice::ReadOnly))
     {
@@ -1478,17 +1432,17 @@ void Widget::treeWidgetInit(const QString & ip,uchar addr,uchar lcNum,QStringLis
     
 
 
-   if(deviceBox->currentText()=="电源柜")
-   {
-       itemParent= AddTreeNode(itemRoot,"电源柜",0);
-       itemParent->setExpanded(true);
-       for(ushort i=0;i< lcNum ;i++)//创建子节点
-       {
-           itemChild= AddTreeNode(itemParent,msg.at(3+2*i),msg.at(4+2*i));
-           itemChild->setExpanded(true);
-           itemChild->setBackgroundColor(1,QColor(160,207,207));
-       }
-   }
+    if(deviceBox->currentText()=="电源柜")
+    {
+        itemParent= AddTreeNode(itemRoot,"电源柜",0);
+        itemParent->setExpanded(true);
+        for(ushort i=0;i< lcNum ;i++)//创建子节点
+        {
+            itemChild= AddTreeNode(itemParent,msg.at(3+2*i),msg.at(4+2*i));
+            itemChild->setExpanded(true);
+            itemChild->setBackgroundColor(1,QColor(160,207,207));
+        }
+    }
 
 
 }
